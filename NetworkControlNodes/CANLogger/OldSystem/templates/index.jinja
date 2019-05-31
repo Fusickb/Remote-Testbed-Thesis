@@ -1,0 +1,44 @@
+{% extends "layouts/base.jinja" %}
+
+{% block js %}
+{{super()}}
+<script>
+$(function(){
+setInterval(oneSecondFunction, 1000);
+});
+
+function oneSecondFunction() {
+$.get("api/get_num", function(data, status){
+        document.getElementById("num").innerHTML = data.number;
+        document.getElementById("date").innerHTML = data.date;
+    });
+}
+</script>
+<script type="text/javascript" src="/static/js/bootstrap-formhelpers-phone.js"></script>
+{% endblock %}
+
+
+{# {%block backgroundcolor%}black{%endblock%} #}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12">
+		<h1>Now Serving <span id='num'>{{number}}</span></h1>
+		<h3>Last updated <span id='date'>{{date}}</span></h3>
+	</div>
+	<div class="col-sm-12">
+		{% if not users_number %}
+		<form class="form-inline" action="/" method="post">
+	      <div class="form-group">
+		      <label for="usr">Name:</label>
+			  <input type="text" class="form-control" id="usr" name="user_name">
+	        <label for="number">Phone Number (optional)</label>
+	        <input type="text" class="input-large bfh-phone" data-format="+1 (ddd) ddd-dddd" id="number" name="phone_number">
+	      </div>
+	      <button type="submit" class="btn btn-primary">Get Number</button>
+	    </form>
+	    {% else %}
+		    <h2>Your number is: {{users_number}}</h2>
+	    {% endif %}
+	</div>
+</div>
+{% endblock %}

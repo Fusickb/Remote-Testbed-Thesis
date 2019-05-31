@@ -1,0 +1,1 @@
+python-dev build-essential python-pip python-dev libmysqlclient-dev mysql-server
