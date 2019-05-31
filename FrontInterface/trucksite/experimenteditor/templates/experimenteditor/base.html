@@ -1,0 +1,20 @@
+{% load static bootstrap3 %}
+{% block head %}
+<head>
+<script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+<title>Experiment Editor - {% block extratitle %}{% endblock %}</title>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/slate/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'experimenteditor/style.css' %}">
+ <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+ {%block extrahead%}{%endblock%}
+ </head>
+{% endblock %}
+<div id="contentwrapper">
+{% block content %}
+{% endblock %}
+</div>

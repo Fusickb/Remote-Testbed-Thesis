@@ -1,0 +1,11 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Confrim Command Deletion{% endblock %}
+{% block content %}
+<form action="" method="post">
+	{% csrf_token %}
+	<h3>Are you sure you want to delete the {{object.get_commandchoice_display}} {% if object.is_repeated %}repeated{% endif %} command at {{object.delay}} s?</p>
+	<br>
+	<a href="{% url 'edit_experiment' exp_pk=experiment.exp_pk %}" class="btn btn-danger">{% bootstrap_icon 'ban-circle' %} Cancel</a>	{% bootstrap_button "Confirm" button_type='submit' icon='ok-circle' button_class='btn-success' %}
+</form>
+{% endblock %}

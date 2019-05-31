@@ -1,0 +1,134 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}{{experiment.experiment_title}}{% endblock %}
+{% block content %}
+{% bootstrap_button "Log Out" icon="log-out" button_type="link" href="/accounts/logout" button_class='btn-danger' extra_classes="logoutbutton"%}
+<h1 class="text-center">Commands For {{experiment.experiment_title}}:</h1>
+<table class='table table-hover'>
+	<thead>
+		<th>Command Start (s)</th>
+		<th>Command</th>
+		<th>Is Repeated</th>
+		<th>Delay Between Commands (s)</th>
+		<th>Number of Repititions</th>
+		<th></th>
+		<th></th>
+		<th>Quantity (if applicable)</th>
+	</thead>
+	<tbody>
+		<tr>
+		<td>0</td>
+		<td>Turn Ignition On</td>
+		<td>{% bootstrap_icon 'remove' %}</td>
+		<td>N/A</td>
+		<td>N/A</td>
+		<td><a class="btn btn-primary disabled" href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+		<td><a class="btn btn-warning disabled" href="#"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+		<td>N/A</td>	
+		</tr>
+		<tr>
+		<td>0</td>
+		<td>Set Axle-Based Vehicle Speed (mph)</td>
+		<td>{% bootstrap_icon 'remove' %}</td>
+		<td>N/A</td>
+		<td>N/A</td>
+		<td><a class="btn btn-primary disabled" href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+		<td><a class="btn btn-warning disabled" href="#"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+		<td>0</td>	
+		</tr>
+		{% for command in commands %}
+		<tr>
+		<td>{{command.delay|floatformat:"-4"}}</td>		
+		<td>{{command.get_commandchoice_display}}</td>
+		<td>{% if command.is_repeated  %} {% bootstrap_icon 'ok' %} {% else %} {% bootstrap_icon 'remove' %} {% endif %} </td>
+		<td>{% if command.is_repeated  %} {{ command.repeat_delay|floatformat:"-4" }} {% else %} N/A {% endif %} </td>
+		<td>{% if command.is_repeated %} {{command.repeat_count}} {% else %} N/A {% endif %}</td>
+		<td><a class="btn btn-primary" href="{{command.get_absolute_url}}"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+		<td><a class="btn btn-warning" href="{% url 'delete_command' exp_pk=command.parent_experiment.exp_pk pk2=command.id %}"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+		<td>{% if command.quantity or command.quantity == 0 %}{{command.quantity}}{% else %}N/A{% endif %}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<a class="btn btn-success createbutton" href="{% url 'create_command' exp_pk %}" type="link"><span class="glyphicon glyphicon-plus"></span> Add Serial Command</a> 
+<table class='table table-hover' id="cantable">
+	<thead>
+	<th>Command Start (s)</th>
+	<th>Message ID</th>
+	<th>Message Length</th>
+	<th>Message</th>
+	<th>Interface</th>
+	<th></th>
+	<th></th>
+	</thead>
+	<tbody>
+		{% for command in cancommands %}
+			<tr>
+				<td>{{command.delay|floatformat:"-4"}}</td>
+				<td>{{command.message_id}}</td>
+				<td>{{command.length}}</td>
+				<td>{{command.message}}</td>
+				<td>{{command.get_interface_display}}</td>
+				<td><a class="btn btn-primary" href="{{command.get_absolute_url}}"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+				<td><a class="btn btn-warning" href="{% url 'delete_can_command' exp_pk=command.parent_experiment.exp_pk pk2=command.id %}"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% bootstrap_button "My Experiments" icon="arrow-left" button_type="link" href="/experimenteditor/myexperiments" button_class="btn-primary" extra_classes="myexpbutton" %}
+<a class="btn btn-success createbutton" href="{% url 'create_can_command' exp_pk %}" type="link"><span class="glyphicon glyphicon-plus"></span> Add CAN Command</a>
+<table class='table table-hover' id="cantable">
+	<thead>
+		<th>Command Start (s)</th>
+		<th>Interface</th>
+		<th>Gap</th>
+		<th>Extended CAN</th>
+		<th>RTR Frame</th>
+		<th>Message ID</th>
+		<th>Message Length</th>
+		<th>CAN Data</th>
+		<th># of CAN Frames Before End</th>
+		<th></th>
+		<th></th>
+	</thead>
+	<tbody>
+		{% for command in cangencommands %}
+		<tr>
+			<td>{{command.delay|floatformat:"-4"}}</td>
+			<td>{{command.get_interface_display}}</td>
+			<td>{% if command.gap %}{{command.gap}} ms{% elif command.gap == 0 %}0 ms{% else %}200 ms (default){% endif %}</td>
+			<td>{% if command.extended_can %}{% bootstrap_icon 'ok' %}{% else %}{% bootstrap_icon 'remove' %}{%endif%}</td>
+			<td>{% if command.send_rtr_frame %}{% bootstrap_icon 'ok' %}{% else %}{% bootstrap_icon 'remove' %}{% endif %}</td>
+			<td>{%if command.message_id == 'i' %}Increasing{% elif command.message_id %}{{command.message_id}}{% else %}Random{% endif %}</td>
+			<td>{% if command.message_length == 'i' %}Increasing{% elif command.message_length or command.message_length == 0 %}{{ command.message_length }}{% else %}Random{%endif%}</td>
+			<td>{% if command.can_data == 'i'%}Increasing{% elif command.can_data %}{{command.can_data}}{% else %}Random{% endif %}</td>
+			<td>{% if command.number_of_can_frames_before_end or command.number_of_can_frames_before_end == 0 %}{{command.number_of_can_frames_before_end}}{% else %}Infinite{%endif%}</td>
+			<td><a class="btn btn-primary" href="{{command.get_absolute_url}}"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+			<td><a class="btn btn-warning" href="{% url 'delete_cangen_command' exp_pk=command.parent_experiment.exp_pk pk2=command.id %}"><span class="glyphicon glyphicon-trash"></span> Delete</a>	
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<a class="btn btn-success createbutton" href="{% url 'create_cangen_command' exp_pk %}" type="link"><span class="glyphicon glyphicon-plus"></span> Add CANGen Command</a>
+<table class='table table-hover' id="ecutable">
+	<thead>
+		<th>Command Start (s)</th>
+		<th>Update Type</th>
+		<th>Update Value</th>
+		<th></th>
+		<th></th>
+	</thead>
+	<tbody>
+	{% for update in ecuupdates %}
+	<tr>
+		<td>{{update.delay|floatformat:"-4"}}</td>
+		<td>{{update.get_update_type_display}}</td>
+		<td>{% if update.update_type == 1 and update.vin  %}{{update.vin}}{% elif update.update_type == 2 and update.governor_speed %}{{update.governor_speed}} mph{% else %}N/A{% endif %}</td>
+		<td><a class="btn btn-primary" href="{{update.get_absolute_url}}"><span class="glyphicon glyphicon-edit"></span> Edit</a></td>
+		<td><a class="btn btn-warning" href="{% url 'delete_ecu_update' exp_pk=update.parent_experiment.exp_pk pk2=update.id %}"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+<a class="btn btn-success createbutton" href="{% url 'create_ecu_update' exp_pk %}" type="link"><span class="glyphicon glyphicon-plus"></span> Add ECU Update</a>
+{% endblock %}

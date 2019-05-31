@@ -1,0 +1,11 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Confrim Experiment Deletion{% endblock %}
+{% block content %}
+<form action="" method="post">
+	{% csrf_token %}
+	<h2 class="text-center">Are you sure you want to delete the experiment "{{object.experiment_title}}"?</h3>
+	<br>
+	<a href="{% url 'my_experiments' %}" class="btn btn-danger text-center">{% bootstrap_icon 'ban-circle' %} Cancel</a>	{% bootstrap_button "Confirm" button_type='submit' icon='ok-circle' button_class='btn-success' extra_classes="text-center" %}
+</form>
+{% endblock %}

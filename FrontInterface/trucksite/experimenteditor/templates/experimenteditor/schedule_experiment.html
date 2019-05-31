@@ -1,0 +1,159 @@
+{% extends 'experimenteditor/base.html'%}
+{% load bootstrap3 scheduletags %}
+{% block extratitle %}Scheduling {{experiment.experiment_title}}{% endblock %}
+{% block content %}
+<h2 class="text-center">Experiment Scheduling Information For {{experiment.experiment_title}}</h2>
+{% bootstrap_form_errors form %}
+<form id="scheduleform" action="" method="post">{% csrf_token %}
+<table class="table">
+{{ form.as_table }}
+</table>
+<div class="well"><h5 class='text-warning'>Warning: Once you press "Schedule and Submit", your experiment cannot be edited until it is run.</h5></div>
+{% buttons submit="Schedule and Submit" %}{% endbuttons %}
+</form>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var x = new Date();
+		var tzoffset = x.getTimezoneOffset() / 60; 
+		$("#id_tzoffset").attr("value",tzoffset);
+		$('#id_end_0').attr('disabled',true);
+		$('#id_end_1').attr('disabled',true);
+		var startsec = parseMyDateTime($('#id_start_0').val() + ' ' + $('#id_start_1').val()) / 1000
+		var endsec = parseMyDateTime($('#id_end_0').val() + ' ' + $('#id_end_1').val()) / 1000
+		var duration = endsec-startsec
+		var starttime = $('#id_start_1').val()
+		var endtime = $('#id_end_1').val()
+		var hh = starttime.substr(0,2)
+		var m = starttime.substr(3,2)
+		var s = starttime.substr(-2)
+		var pp = 'AM'
+		var h = hh
+		if (h >= 12){
+			h = hh - 12;
+			pp = "PM";
+		}
+		if (h == 0){
+			h = 12;
+		}
+		h = h < 10 ? '0' + h : h;
+		m = m < 10 ? '0' + m : m;
+		s = s < 10 ? '0' + s : s;
+		var hms = h + ':' + m + ':' + s + ' ' + pp
+		$('#id_start_0_1').val(hms)
+		hh = endtime.substr(0,2)
+		m = endtime.substr(3,5)
+		s = endtime.substr(-2)
+		pp = 'AM'
+		h = hh
+		if (h >= 12){
+			h = hh - 12;
+			pp = "PM";
+		}
+		if (h == 0){
+			h = 12;
+		}
+		h = h < 10 ? '0' + h : h;
+		m = m < 10 ? '0' + m : m;
+		s = s < 10 ? '0' + s : s;
+	    hms = h + ':' + m + ':' + s + ' ' + pp
+		$('#id_start_0').change({ durations: duration }, function (event){
+			if (parseMyDateTime($('#id_start_0').val() + ' ' + $('#id_start_1').val()) != NaN){
+				var startdate = parseMyDateTime($('#id_start_0').val() + ' ' + $('#id_start_1').val())
+				var starts = startdate / 1000
+				var ends = starts + event.data.durations
+				end = new Date(ends*1000)
+				var eyear = end.getFullYear()
+				var emonth = '0' + (end.getMonth() + 1)
+				var eday = '0' + end.getDate()
+				var ymd = eyear + '-' + emonth.substr(-2) + '-' + eday.substr(-2)
+				var hh = end.getHours()
+				var m = end.getMinutes()
+				var s = end.getSeconds()
+				var pp = 'AM'
+				var h = hh
+				if (h >= 12){
+					h = hh - 12;
+					pp = "PM";
+				}
+				if (h == 0){
+					h = 12;
+				}
+				h = h < 10 ? '0' + h : h;
+				m = m < 10 ? '0' + m : m;
+				s = s < 10 ? '0' + s : s;
+				var hms = h + ':' + m + ':' + s + ' ' + pp
+				$('#id_end_0').val(ymd)
+				$('#id_end_1').val(hms)
+			}
+		});
+		$('#id_start_1').change({ durations: duration }, function (event){
+			if (parseMyDateTime($('#id_start_0').val() + ' ' + $('#id_start_1').val()) != NaN){
+				var startdate = parseMyDateTime($('#id_start_0').val() + ' ' + $('#id_start_1').val())
+				var starts = startdate / 1000
+				var ends = starts + event.data.durations
+				end = new Date(ends*1000)
+				var eyear = end.getFullYear()
+				var emonth = '0' + (end.getMonth() + 1)
+				var eday =  '0' + end.getDate()
+				var ymd = eyear + '-' + emonth.substr(-2) + '-' + eday.substr(-2)
+				var hh = end.getHours()
+				var m = end.getMinutes()
+				var s = end.getSeconds()
+				var pp = 'AM'
+				var h = hh
+				if (h >= 12){
+					h = hh - 12;
+					pp = "PM";
+				}
+				if (h == 0){
+					h = 12;
+				}
+				h = h < 10 ? '0' + h : h;
+				m = m < 10 ? '0' + m : m;
+				s = s < 10 ? '0' + s : s;
+				var hms = h + ':' + m + ':' + s + ' ' + pp
+				$('#id_end_0').val(ymd)
+				$('#id_end_1').val(hms)
+			}
+		});
+		$(':submit').click( function (){
+			$('#id_end_0').attr('disabled',false)
+			$('#id_end_1').attr('disabled',false)
+		});
+	});
+	function parseMyDateTime(date) {
+		var datearr = date.split(' ');
+		if (datearr.length != 3){
+			return NaN
+		}
+		var ymdsplit = datearr[0].split('-');
+		if (ymdsplit.length != 3){
+			return NaN
+		}
+		var hmssplit = datearr[1].split(':');
+		if (hmssplit.length != 3){
+			return NaN
+		}
+		var ampm = datearr[2];
+		var y = parseInt(ymdsplit[0]);
+		var m = ymdsplit[1] - 1;
+		var d = parseInt(ymdsplit[2]);
+		var min = parseInt(hmssplit[1]);
+		var sec = parseInt(hmssplit[2]);
+		var hour = parseInt(hmssplit[0]);
+		if(ampm == 'PM'){
+			hour += 12;
+			if(hour == 24){
+				hour = 12;
+			}
+		} else if (ampm == 'AM'){
+			if(hour == 12){
+				hour = 24;
+			}
+		} else {
+			return NaN;
+		}
+		return new Date(y, m, d, hour, min, sec)
+	}
+</script>
+{% endblock %}

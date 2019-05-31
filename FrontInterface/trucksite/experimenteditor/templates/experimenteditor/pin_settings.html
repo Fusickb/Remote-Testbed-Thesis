@@ -1,0 +1,110 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 tz notifications_tags static %}
+{% block extratitle %}Live Data{% endblock %}
+{% block extrahead %}
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks refresh_period=1 callbacks='fill_notification_badge,fill_notification_list_no_timestamp' %}
+{% endblock %}
+{% block content %}
+{% bootstrap_button "My Experiments" icon="arrow-left" button_type="link" href="/experimenteditor/myexperiments" button_class="btn-primary" extra_classes="myexpbutton" %}
+<div class="page-header"><h1 class="text-center">Pin Settings</h1></div>
+<a class="btn btn-danger logoutbutton" href="{% url 'auth_logout' %}" type="link"><span class="glyphicon glyphicon-log-out"></span> Log Out</a>
+<div class="text-center">
+	<a class="btn btn-success" align="center" href="{% url 'live_data' %}" type="link"><span class="glyphicon glyphicon-heart"></span> Live Data</a>
+</div>
+<br></br>
+<div style="overflow: auto;max-height: 500px">
+<table id="data-table" class="table table-bordered table-striped">
+	<thead>
+	<tr>
+		<th>Pin Number</th>
+		<th>Signal Type</th>
+		<th>Conversion Factor</th>
+		<th>Conversion Units</th>
+		<th>Bit Resolution</th>
+		<th>Bit Resolution Units</th>
+		<th>Mapping Slope</th>
+		<th>Mapping Offset</th>
+	</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+</div>
+<script type="text/javascript">
+	function addRow(data){
+		var row;
+		console.log(data, data.length);
+		row = document.getElementById("data-table").insertRow();
+
+		for (i = 0; i < data.length; i++){
+			console.log(typeof data[i]);
+			row.insertCell(i).innerHTML = data[i];
+		};
+	};
+
+	var url = "http://129.244.254.22:8080/pinsettings/";
+	$.ajaxSetup({
+			crossdomain: true,
+			url: url,
+			dataType: 'jsonp'
+		});
+	
+	function createTable() {
+		$.ajax({success: function(jsondata){
+			jsondata = jsondata['File'].split("\n");
+			console.log(jsondata);
+			var i;
+			for(i = 1; i < jsondata.length; i++){
+				var rowData = jsondata[i].split(",");
+				if (rowData.length > 1){
+					addRow(rowData);
+				};
+			};
+
+		},
+		error: function(xhr, status, error){
+				console.log(JSON.parse(xhr.responseText));
+				console.log(status);
+				alert(error.message);
+			}
+		});
+	};
+	createTable();
+
+	function updateSetting(){
+		settings = document.getElementById("pinNum").value       + "," + document.getElementById("signalType").value  + "," +
+				   document.getElementById("convFactor").value   + "," + document.getElementById("convUnits").value   + "," +
+				   document.getElementById("bitRes").value       + "," + document.getElementById("bitResUnits").value + "," +
+				   document.getElementById("mappingSlope").value + "," + document.getElementById("mapOffset").value;
+		jsonData = {"Settings": settings};
+		console.log(jsonData);
+		$.ajax({
+			type: "post",
+			url: url,
+			data: jsonData,
+			crossdomain: true,
+			dataType: 'json'
+		});
+		setTimeout(function(){location.reload(true);},250);
+	}
+
+</script>
+
+<div class="center-block">
+	<h2 class="text-center">Pin Update Values</h2>
+</div>
+<div class="center-block" style="text-align: center">
+	Pin Number: <input type="text" style="margin:0 auto;color:black" id="pinNum" value="1">
+	Signal Type: <input type="text" style="margin:0 auto;color:black" id="signalType" value="N/A"> (pwm/voltage/potentiometer) <br></br>
+	Conversion Factor: <input type="text" style="margin:0 auto; color:black" id="convFactor" value=1> 
+	Conv. Units: <input type="text" style="margin:0 auto; color:black" id="convUnits" value="N/A"> (If Conv. Factor = 1 No conversion) <br></br>
+	Bit Resolution: <input type="text" style="margin:0 auto; color:black" id="bitRes" value=1>
+	Bit Res. Units: <input type="text" style="margin:0 auto; color:black" id="bitResUnits" value="N/A"> (Found in J1939 Standards) <br></br>
+	Mapping Slope: <input type="text" style="margin:0 auto; color:black" id="mappingSlope" value=1>
+	Mapping Offset: <input type="text" style="margin:0 auto; color:black" id="mapOffset" value=1> (Maps the bits to input value)<br></br>
+	<button class = "btn btn-success" id="ijnBtn" name="ijn" style = "color:black" onclick="updateSetting()">Update Pin</button>
+
+</form>
+
+{% endblock %}

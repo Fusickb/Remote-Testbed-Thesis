@@ -1,0 +1,9 @@
+{% extends "experimenteditor/base.html" %}
+{% block extratitle %}Test Chart 1{% endblock %}
+{% block content %}
+<div id="plot-container">
+{% autoescape off %}
+{{ html_str }}
+{% endautoescape %}
+</div>
+{% endblock %}

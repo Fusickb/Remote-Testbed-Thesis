@@ -1,0 +1,261 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Forms &#8212; CAN Experiment Frontend 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Tasks" href="tasks.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="forms">
+<h1>Forms<a class="headerlink" href="#forms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="form-classes">
+<h2>Form Classes<a class="headerlink" href="#form-classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="experimenteditor.forms.ExperimentForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">ExperimentForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.ExperimentForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an <code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code> instance from a user title.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.DuplicateExperimentForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">DuplicateExperimentForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.DuplicateExperimentForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicates an existing <code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code> .  TODO: fix <a class="reference internal" href="#experimenteditor.forms.DuplicateExperimentForm.dup_experiment" title="experimenteditor.forms.DuplicateExperimentForm.dup_experiment"><code class="xref py py-attr docutils literal"><span class="pre">dup_experiment</span></code></a> ‘s <code class="docutils literal"><span class="pre">queryset</span></code> so it doesn’t return <strong>all</strong> experiments, including ones that aren’t the user’s.</p>
+<dl class="attribute">
+<dt id="experimenteditor.forms.DuplicateExperimentForm.dup_experiment">
+<code class="descname">dup_experiment</code><a class="headerlink" href="#experimenteditor.forms.DuplicateExperimentForm.dup_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code> to be duplicated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="experimenteditor.forms.DuplicateExperimentForm.new_title">
+<code class="descname">new_title</code><a class="headerlink" href="#experimenteditor.forms.DuplicateExperimentForm.new_title" title="Permalink to this definition">¶</a></dt>
+<dd><p>The new title of the experiment.  If left blank, this will be the old experiment’s title plus “Copy”.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.SSSCommandForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">SSSCommandForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.SSSCommandForm" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Creates/Updates an <code class="xref py py-class docutils literal"><span class="pre">OneTimeSSSCommand</span></code> instance.  TODOS:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>remove looping functionality from model and form, was just confusing…</li>
+<li>allow user to edit an EndExperiment command’s delay without deleting and re-creating the command</li>
+</ol>
+</div></blockquote>
+</div></blockquote>
+<dl class="attribute">
+<dt id="experimenteditor.forms.SSSCommandForm.quantity">
+<code class="descname">quantity</code><a class="headerlink" href="#experimenteditor.forms.SSSCommandForm.quantity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analagous to <a class="reference internal" href="models.html#experimenteditor.models.OneTimeSSSCommand" title="experimenteditor.models.OneTimeSSSCommand"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.OneTimeSSSCommand</span></code></a> ‘s <code class="docutils literal"><span class="pre">quantity</span></code> attribute, javascript ensures that this field is blank if the command takes no arguments (Start/Stop Ignition, etc.)</p>
+<p>If there is more than one argument to a command (braking is the only one at this point), each value must be comma-separated.</p>
+<p>Every value entered must be castable to <code class="docutils literal"><span class="pre">float</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="experimenteditor.forms.SSSCommandForm.parent_experiment">
+<code class="descname">parent_experiment</code><a class="headerlink" href="#experimenteditor.forms.SSSCommandForm.parent_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="models.html#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.Experiment</span></code></a> this command belongs to.  Auto-filled.</p>
+</dd></dl>
+
+<p><code class="docutils literal"><span class="pre">is_repeated</span></code>, <code class="docutils literal"><span class="pre">repeat_count</span></code> and <code class="docutils literal"><span class="pre">repeat_delay</span></code> are functional but deprecated.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.CANCommandForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">CANCommandForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.CANCommandForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates/Updates a <a class="reference internal" href="models.html#experimenteditor.models.CANCommand" title="experimenteditor.models.CANCommand"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.CANCommand</span></code></a> instance.  TODOS:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Un-split the <code class="xref py py-attr docutils literal"><span class="pre">message_id</span></code> field into one <code class="docutils literal"><span class="pre">RegexField</span></code> (should be easy, deprecates the Four-byte widget and field).</li>
+</ol>
+</div></blockquote>
+<p>For all fields see <a class="reference internal" href="models.html#experimenteditor.models.CANCommand" title="experimenteditor.models.CANCommand"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.CANCommand</span></code></a> for details on what they are.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.CANGenCommandForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">CANGenCommandForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.CANGenCommandForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates/Updates a <a class="reference internal" href="models.html#experimenteditor.models.CANGenCommand" title="experimenteditor.models.CANGenCommand"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.CANGenCommand</span></code></a> instance.  TODOS:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Get the model help text to display (somehow) on the form page, immensely helpful.  Probably too long to fit inside the box, currently.</li>
+</ol>
+</div></blockquote>
+<p>For all class attribute explanations see :py:class`experimenteditor.models.CANGenCommand` for more details.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.ExperimentEventForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">ExperimentEventForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.ExperimentEventForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This form class does a few things:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Creates a <code class="xref py py-class docutils literal"><span class="pre">schedule.models.Event</span></code> instance that describes when the experiment starts and for how long it lasts.  Timezone conversions are handled (to a point, see source for details).</li>
+<li>Calls/schedules <a class="reference internal" href="tasks.html#experimenteditor.tasks.send_experiment_json" title="experimenteditor.tasks.send_experiment_json"><code class="xref py py-func docutils literal"><span class="pre">experimenteditor.tasks.send_experiment_json()</span></code></a> and <code class="xref py py-func docutils literal"><span class="pre">experimenteditor.tasks.send_reminder_email()</span></code> if the user decides to send a reminder email to themself.</li>
+<li>Creates a <a class="reference internal" href="models.html#experimenteditor.models.RunResult" title="experimenteditor.models.RunResult"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.RunResult</span></code></a> object that will contain the log/any data the user decides to plot through the “Visualize” page.  This is tied automatically to the <a class="reference internal" href="models.html#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.Experiment</span></code></a> instance upon creation.</li>
+<li>Creates an <code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.ExperimentSchedulingInfo</span></code> instance that ties the newly created <code class="xref py py-class docutils literal"><span class="pre">schedule.models.Event</span></code> to the <a class="reference internal" href="models.html#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.Experiment</span></code></a> and marks it as scheduled until the experiment is successfully run.</li>
+<li>Tries to create empty <a class="reference internal" href="models.html#experimenteditor.models.ObservableQuantity" title="experimenteditor.models.ObservableQuantity"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.ObservableQuantity</span></code></a> objects that correspond to what the user graphed last run by getting the most recent <a class="reference internal" href="models.html#experimenteditor.models.RunResult" title="experimenteditor.models.RunResult"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.RunResult</span></code></a> and copying all its associated <a class="reference internal" href="models.html#experimenteditor.models.ObservableQuantity" title="experimenteditor.models.ObservableQuantity"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.ObservableQuantity</span></code></a> objects from the last run to the current run.</li>
+</ol>
+</div></blockquote>
+<p>TODOS:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Fix item #5, currently not functional, but would be very nice if one could just re-schedule and have it save your graph settings somehow so you only have to hit “Visualize” once unless you want to make changes.</li>
+</ol>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.GraphableQuantityChoiceForm">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">GraphableQuantityChoiceForm</code><span class="sig-paren">(</span><em>ModelForm</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.GraphableQuantityChoiceForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This form class is the “Visualize” page.  It sets up the <a class="reference internal" href="models.html#experimenteditor.models.ObservableQuantity" title="experimenteditor.models.ObservableQuantity"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.ObservableQuantity</span></code></a> objects so that they can receive plot data.</p>
+<p>Currently tied to an SPN (and therefore, a <code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.SPNPGNEntry</span></code>) internally so that titles are auto-generated based on SPN and the spreadsheet imported into the database.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="widgets-fields">
+<h2>Widgets/Fields<a class="headerlink" href="#widgets-fields" title="Permalink to this headline">¶</a></h2>
+<p>There are two widget/field pairs, but they work very similarly.  They allow multiple text fields (hex bytes) to be compressed into one hex string on the Python side of things.  They also allow a single hex string to be chopped up into byte-sized pieces, which fill each individual text field on the HTML side of things.  I will describe what the eight-byte variant does, and the four-byte variant is almost identical.</p>
+<dl class="class">
+<dt id="experimenteditor.forms.MultiHexEightByteField">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">MultiHexEightByteField</code><span class="sig-paren">(</span><em>django.forms.MultiValueField</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.MultiHexEightByteField" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="function">
+<dt id="experimenteditor.forms.MultiHexEightByteField.compress">
+<code class="descname">compress</code><span class="sig-paren">(</span><em>data_list</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.MultiHexEightByteField.compress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compresses the data from a list of byte strings into one 16-character hex string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_list</strong> (<em>list</em>) – A list of 2-character strings.  Validation for this is done in <a class="reference internal" href="#experimenteditor.forms.CANCommandForm" title="experimenteditor.forms.CANCommandForm"><code class="xref py py-class docutils literal"><span class="pre">CANCommandForm</span></code></a> through Django’s <code class="docutils literal"><span class="pre">RegexField</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.forms.MultiHexEightByteWidget">
+<em class="property">class </em><code class="descclassname">experimenteditor.forms.</code><code class="descname">MultiHexEightByteWidget</code><span class="sig-paren">(</span><em>django.forms.MultiWidget</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.MultiHexEightByteWidget" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="function">
+<dt id="experimenteditor.forms.MultiHexEightByteWidget.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>attrs=None</em>, <em>mode=0</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.MultiHexEightByteWidget.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the widget, applying any attributes if needed. See the django documentation for <code class="docutils literal"><span class="pre">django.forms.MultiWidget</span></code> for more details on the parameters.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="experimenteditor.forms.MultiHexEightByteWidget.decompress">
+<code class="descname">decompress</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.forms.MultiHexEightByteWidget.decompress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a value (a hex string in this case) and splits it up into a list of 2-character chunks.  Program defensively, because <a class="reference internal" href="#experimenteditor.forms.MultiHexEightByteWidget.decompress" title="experimenteditor.forms.MultiHexEightByteWidget.decompress"><code class="xref py py-func docutils literal"><span class="pre">decompress()</span></code></a> is often called while <code class="docutils literal"><span class="pre">value</span></code> is <code class="docutils literal"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CAN Experiment Frontend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="inst.html">Installation/Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="views.html">Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">Tasks</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Forms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#form-classes">Form Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#widgets-fields">Widgets/Fields</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tasks.html" title="previous chapter">Tasks</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Ethan Robards.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/forms.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

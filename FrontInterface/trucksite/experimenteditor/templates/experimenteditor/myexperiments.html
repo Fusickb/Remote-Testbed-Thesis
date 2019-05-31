@@ -1,0 +1,119 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 tz notifications_tags static %}
+{% block extratitle %}My Experiments{% endblock %}
+{% block extrahead %}<script type="text/javascript">
+	function fill_notification_list_no_timestamp(data){
+		var menus = document.getElementsByClassName('dropdown-menu');
+		if (menus){
+			var messages = data.unread_list.map(function (item){
+				 var message = "";
+				 var messageclass = "";
+			if(typeof item.actor !== 'undefined'){
+				message = item.actor;
+			}
+			if(typeof item.verb !== 'undefined'){
+				message = message + " " + item.verb;
+			}
+			if(typeof item.target !== 'undefined'){
+				message = message + " " + item.target;
+			}
+			if(typeof item.level !== 'undefined'){
+				if(item.level == 'success' || item.level == 'info' || item.level == 'warning'){
+					messageclass = 'text-' + item.level
+				} else if (item.level == 'error'){
+					messageclass = 'text-danger'
+				}
+			}
+			return '<li class="' + messageclass + '">' + message + '</li>';
+			}).join('')
+		
+			for (var i = 0; i <  menus.length; i++){
+				menus[i].innerHTML = messages
+			}
+		}
+
+	}
+</script>
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks refresh_period=1 callbacks='fill_notification_badge,fill_notification_list_no_timestamp' %}
+{% endblock %}
+{% block content %}
+<script type="text/javascript">
+$('document').ready(function(){
+	$('#clearAllNotifications').click( function(){
+		var currenturl = $(location).attr('href');
+		var apiurlcount = currenturl.replace("myexperiments/","notifications/api/unread_count")
+		var unreadcount = $.get(apiurlcount, function(data){
+			return data.unread_count
+		});
+		var apiurllist = currenturl.replace("myexperiments/","notifications/api/unread_list/?max=" + unreadcount + '&mark_as_read=true')
+		$.get(apiurllist) 
+	});
+});
+</script>
+<div class="page-header"><h1 class="text-center">My Experiments</h1></div>
+	<a class="btn btn-danger logoutbutton" href="{% url 'auth_logout' %}" type="link"><span class="glyphicon glyphicon-log-out"></span> Log Out</a>
+<div class="text-center">
+	<a class="btn btn-success" type="link" href="{% url 'live_data' %}"><span class="glyphicon glyphicon-heart"></span> Live Data</a>
+</div>
+<div class="maxwidth block-center dropdown">
+	<button class="btn btn-info dropdown-toggle maxwidth block-center" type="button" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		Notifications {% live_notify_badge classes="badge" %}
+		<span class="caret"></span>
+	</button>
+	{% live_notify_list classes="dropdown-menu" %}
+	<button class = "btn btn-warning" type="link" href="#" id="clearAllNotifications">{% bootstrap_icon "remove" %} Delete All Notifications</button>
+</div>
+{% if experiments %}
+<table id="experiment-table" class="table table-hover">
+	<thead>
+	<tr>
+		<th>
+		Title
+		</th>
+		<th></th>
+		<th class="larger">Experiment</th>
+		<th></th>
+		<th>
+		Created On
+		</th>
+		<th class="text-center">
+		Scheduled	
+		</th>
+		<th></th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+		{% for experiment in experiments %}
+		<tr>	
+			<td>{{experiment.experiment_title}}</td>
+			<td><a class={% if experiment.scheduling_info_for %}"btn btn-info disabled"{% else %}"btn btn-info"{% endif %} href="{{experiment.get_absolute_url}}"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+			</td>
+			<td>
+				<a class="btn btn-primary disabled" href="{% url 'edit_quantities' exp_pk=experiment.exp_pk %}"><span class="glyphicon glyphicon-stats"></span> Visualize</a>
+			</td>
+			<td>
+			<a class="btn btn-warning" href="{% url 'delete_experiment' exp_pk=experiment.exp_pk %}"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+			</td>
+			<td>{% localtime on %}
+			{{experiment.experiment_created_date}}
+			{% endlocaltime %}</td>
+			<td class="text-center">{% if experiment.scheduling_info_for %}{% bootstrap_icon "ok" %}{%else%}{% bootstrap_icon "remove" %}{%endif%}</td>
+			<td><a class="btn btn-info {% if experiment.scheduling_info_for or not experiment.has_end %} disabled {% endif %}" href="{% url 'schedule_week' exp_pk=experiment.exp_pk calendar_slug='experiment-calendar' %}" type="link"><span class="glyphicon glyphicon-calendar"></span> Schedule</a></td>
+			<td>
+				<a class="btn btn-success {% if experiment.has_results %}{% else %}disabled{% endif %}" href="{% url 'results_list' exp_pk=experiment.exp_pk %}" type="link"><span class="glyphicon glyphicon-eye-open"></span> View Past Results</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% else %}
+<div class="center-block"><h2 class="text-center">No experiments found.  Click the "Create" button to get started!</h2></div>
+{% endif %}
+{% bootstrap_button "Create" icon="plus" button_type="link" href="create/" button_class='btn-success' extra_classes="createbutton" %}
+{% if experiments %}
+{% bootstrap_button "Duplicate" icon="plus" button_type="link" href="duplicate/" button_class='btn-info' extra_classes="createbutton" %}
+{% endif %}
+{% endblock %}

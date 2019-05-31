@@ -1,0 +1,59 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Create Command{% endblock %}
+{% block content %}
+<h2 class="text-center">Add Command</h2>
+<a class="btn btn-primary myexpbutton" href="{% url 'edit_experiment' exp_pk=experiment.exp_pk %}" type="link"><span class="glyphicon glyphicon-arrow-left"></span> Back to Experiment</a>
+<form action="" method="post">
+{% csrf_token %}
+{% bootstrap_form form %}
+{% bootstrap_form_errors form form_type='fields' %}
+{% bootstrap_button "Add" button_type="submit" icon="plus" button_class="btn-success" %}
+</form>
+<script type="text/javascript">    $(function() {
+		if(document.getElementById('check').checked){
+			$('.repeatonly').attr('disabled', false)
+		} else {
+			$('.repeatonly').attr('disabled', true)
+			$('#id_repeat_delay').val('')
+			$('#id_repeat_count').val('')
+		}
+        $('#check').click(function() {
+            var disable = $(this).is(':checked');
+            $('.repeatonly').attr('disabled', !disable);
+            if(!disable){
+            	$('#id_repeat_delay').val('')
+				$('#id_repeat_count').val('')
+            }
+        });
+    });</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#id_quantity').attr('disabled', ($('#id_commandchoice :selected').val() == '' || $('#id_commandchoice :selected').val().endsWith('(0)')));
+		if($('#id_commandchoice :selected').val().startsWith('EndExperiment')){
+			$('#check').prop('checked', false)
+			$('#check').attr('disabled', true)
+		} else {
+			$('#check').attr('disabled', false)
+		}
+		$('#id_commandchoice').change(function() {
+			var currchoice = $('#id_commandchoice :selected').val();
+			if(currchoice == '' || currchoice.endsWith('(0)')){
+				$('#id_quantity').attr('disabled', true)
+				if(currchoice.startsWith('EndExperiment')){
+					$('#check').prop('checked', false)
+					$('#check').attr('disabled', true)
+					$('#id_repeat_delay').val('')
+					$('#id_repeat_count').val('')
+					$('.repeatonly').attr('disabled', true)
+				} else {
+					$('#check').attr('disabled', false)
+				}
+			} else {
+				$('#id_quantity').attr('disabled', false)
+				$('#check').attr('disabled', false)
+			}
+		});
+	});
+</script>
+{% endblock %}

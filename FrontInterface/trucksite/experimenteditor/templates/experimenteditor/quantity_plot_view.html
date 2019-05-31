@@ -1,0 +1,55 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Results View{% endblock %}
+{% block content %}
+{% bootstrap_button "Logout" icon="log-out" button_type="link" href="/accounts/logout/" button_class='btn-danger' extra_classes="logoutbutton"%}
+{% if experiment.has_results %}
+<div id="plotcarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+	<ol class="carousel-indicators" style="display: none;">
+		{% for quantity in experiment.get_results %}
+		<li data-target="#plotcarousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %} class="active" {% endif %}>
+		{% endfor %}
+	</ol>
+	<div class="carousel-inner">
+		{% for plot in plots %}
+		<div class="item {% if forloop.first %}active{% endif %}">
+			{{plot|safe}}
+		</div>
+		{% endfor %}
+	</div> 
+	<script type="text/javascript">
+	
+	function resize_plot() {
+		for(var i = 0; i < document.getElementsByClassName('item').length; i++){
+		if(document.getElementsByClassName('item')[i].firstElementChild){
+				pd = document.getElementsByClassName('item')[i].firstElementChild.getElementsByClassName('js-plotly-plot')[0]
+				if(pd){
+					Plotly.Plots.resize(pd)
+					var div_height = pd.offsetHeight
+					var div_width = pd.offsetWidth
+					var svg_height = pd.getElementsByClassName('svg-container')[0].offsetHeight
+					var svg_width = pd.getElementsByClassName('svg-container')[0].offsetWidth
+					if(svg_height != div_height || svg_width != div_width){
+						Plotly.relayout(pd, {height: div_height, width: div_width})
+					}
+				}
+			}
+		}
+	}
+	$(document).ready(resize_plot);
+	$(window).resize(resize_plot);
+	$("#plotcarousel").on('slid.bs.carousel', resize_plot);
+	</script>
+	<a class="left carousel-control" href="#plotcarousel" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#plotcarousel" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+{% else %}
+<h2>Nothing to see here...</h2>
+{% endif %}
+{% endblock %}

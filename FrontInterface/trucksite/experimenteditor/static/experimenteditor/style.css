@@ -1,0 +1,139 @@
+#contentwrapper {
+	padding: 50px 50px 50px 50px;
+}
+#contentwrapper > form {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 45%;
+	background-color: #49505a;
+	border: 1px solid black;
+	padding: 20px;
+}
+#contentwrapper > form > input[type="submit"]{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#contentwrapper > form > ol, #contentwrapper > form > li, #contentwrapper > form > p, #contentwrapper > form > input:not(input[type="submit"]) 
+{
+	text-align: left;
+	padding-left: 50px;
+}
+
+#contentwrapper > form + p, #contentwrapper > form + p + p {
+	text-align: center;
+
+}
+p:only-child {
+	font-size: 200%;
+	text-align: center;
+}
+
+.logoutbutton {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+.createbutton {
+	position: relative;
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+.duplicatebutton {
+	position: relative;
+	margin-top: 20px;
+}
+.createbuttoncan {
+	position: absolute;
+	left: 50px;
+	margin-top: auto;
+}
+.myexpbutton {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+.row-centered{
+	margin-left: auto;
+	margin-right: auto;
+}
+.center-block {
+	margin: auto;
+}
+.calendar-title {
+	text-align: center;
+}
+option, #id_email_reminder {
+	color: #222;
+}
+#plotcarousel {
+	margin-top: 30px;
+}
+a.left.carousel-control, a.right.carousel-control {
+	width: 50px;
+	height: 50px !important;
+	margin-top: auto;
+	margin-bottom: auto;
+	background-color: transparent !important;
+	background-image: none !important;
+}
+.table.table-hover tr{
+	border-bottom: 1px #ccc solid;
+}
+.table > tbody > tr > td, .table > thead > tr > th{
+	border-top: none !important;
+	border-bottom: none !important;
+}
+.table td, .table th {
+	border-right: #ccc 1px solid;
+}
+#contentwrapper > .table.table-hover {
+	max-width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+#contentwrapper > .table.table-hover tr{
+	border-bottom: 1px #ddd solid;
+}
+#contentwrapper > .table.table-hover td, #contentwrapper > .table.table-hover th {
+	border-right: none;
+}
+form > .table td, form > .table th {
+	border-right: none;
+	border-top: none;
+}
+#experiment-table td:nth-child(3), #experiment-table th:nth-child(3) {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+#experiment-table td:nth-child(4), #experiment-table th:nth-child(4) {
+	padding-left: 0px !important;
+}
+#experiment-table th {
+	font-size: 120% !important;
+}
+.maxwidth {
+	max-width: 80%
+}
+.row.center-block > .col-md-3 > .table tr .btn {
+	font-size: 68%;
+	padding: 2px 12px;
+}
+#live_notify_list {
+	padding: 8px 12px;
+}
+.eight-byte, .four-byte {
+	max-width: 45px;
+	margin: 0px 2.5px;
+	text-align: center;
+	display: inline; 
+}
+
+.row.center-block > .col-md-3 > .table.table-striped td div {
+	height: 31px;
+	overflow-y: auto;
+} 
+div.js-plotly-plot {
+	margin-left: auto;
+	margin-right: auto;
+}

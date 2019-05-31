@@ -1,0 +1,42 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Create CAN Command{% endblock %}
+{% block content %}
+<h2 class="text-center">Add CAN Command</h2>
+<a class="btn btn-primary myexpbutton" href="{% url 'edit_experiment' exp_pk=experiment.exp_pk %}" type="link"><span class="glyphicon glyphicon-arrow-left"></span> Back to Experiment</a>
+<form action="" method="post">
+{% csrf_token %}
+{% bootstrap_form form %}
+{% bootstrap_form_errors form form_type='fields' %}
+{% bootstrap_button "Add" button_type="submit" icon="plus" button_class="btn-success" %}
+</form>
+<script type="text/javascript">
+	$(document).ready(function (){
+		var messagelength = $('#id_length option:selected').val();
+		var maxlen = 8
+		for(var i = maxlen - 1; i >= messagelength; i--){
+			idstr = '#id_message_' + i
+			$(idstr).prop("disabled", true);
+			$(idstr).val('00');
+		}
+		$('#id_length').change(function (){
+			var messagelength = $('#id_length option:selected').val();
+			for(var i = 7; i >= messagelength; i--){
+				idstr = '#id_message_' + i
+				$(idstr).prop("disabled", true);
+				$(idstr).val('00');
+			}
+			for(var i = 0; i < messagelength; i++){
+				idstr = '#id_message_' + i
+				$(idstr).prop("disabled", false);
+			}
+		});
+		$(':submit').click(function (){
+			for (var i = 0; i < 8; i++){
+				idstr = '#id_message_' + i
+				$(idstr).prop("disabled", false)
+			}
+		});
+	});
+</script>
+{% endblock %}

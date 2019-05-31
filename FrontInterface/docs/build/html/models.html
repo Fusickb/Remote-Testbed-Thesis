@@ -1,0 +1,441 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Models &#8212; CAN Experiment Frontend 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Views" href="views.html" />
+    <link rel="prev" title="(Re-)Installation and Quick Start" href="inst.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="models">
+<h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="experimenteditor.models.Experiment">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">Experiment</code><a class="headerlink" href="#experimenteditor.models.Experiment" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.Experiment.exp_pk">
+<code class="descname">exp_pk</code><a class="headerlink" href="#experimenteditor.models.Experiment.exp_pk" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The primary key of the experiment.  Using <code class="docutils literal"><span class="pre">pk</span></code> or <code class="docutils literal"><span class="pre">id</span></code> in any experiment query <strong>will</strong> fail.  Use <code class="docutils literal"><span class="pre">exp_pk</span></code> instead.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.Experiment.experiment_title">
+<code class="descname">experiment_title</code><a class="headerlink" href="#experimenteditor.models.Experiment.experiment_title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The title of the experiment.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.Experiment.experiment_created_date">
+<code class="descname">experiment_created_date</code><a class="headerlink" href="#experimenteditor.models.Experiment.experiment_created_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A Python <code class="docutils literal"><span class="pre">datetime</span></code> that is set upon filling out a title and hitting the “Create” button.  Also applies to duplicated experiments.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.Experiment.created_by">
+<code class="descname">created_by</code><a class="headerlink" href="#experimenteditor.models.Experiment.created_by" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A reference to a <code class="xref py py-class docutils literal"><span class="pre">django.contrib.auth.models.User</span></code> instance that indicates who created an experiment.  This determines what users can see on the “My Experiments” page.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.Experiment.is_scheduled">
+<code class="descname">is_scheduled</code><a class="headerlink" href="#experimenteditor.models.Experiment.is_scheduled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A boolean that is true from the time a user schedules an experiment to the time it ends and is done processing.  Is used to disable some functions of the “My Experiments” page.</p>
+<dl class="function">
+<dt id="experimenteditor.models.Experiment.has_results">
+<code class="descname">has_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.Experiment.has_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether or not the experiment has associated logs/plots.  Controls whether or not the “View Results” page is available from the “My Experiments” page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="experimenteditor.models.Experiment.get_results">
+<code class="descname">get_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.Experiment.get_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A QuerySet of <a class="reference internal" href="#experimenteditor.models.ObservableQuantity" title="experimenteditor.models.ObservableQuantity"><code class="xref py py-class docutils literal"><span class="pre">ObservableQuantity</span></code></a> objects that are currently associated with the experiment.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">QuerySet</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="experimenteditor.models.Experiment.get_results_url">
+<code class="descname">get_results_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.Experiment.get_results_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An absolute url to the experiment’s “View Results” page.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="experimenteditor.models.Experiment.slugify_name">
+<code class="descname">slugify_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.Experiment.slugify_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A CamelCase version of the title concatenated with the primary key of the experiment.  Used in <a class="reference internal" href="tasks.html#experimenteditor.tasks.send_experiment_json" title="experimenteditor.tasks.send_experiment_json"><code class="xref py py-func docutils literal"><span class="pre">experimenteditor.tasks.send_experiment_json()</span></code></a>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="experimenteditor.models.Experiment.has_end">
+<code class="descname">has_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.Experiment.has_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the experiment can be scheduled due to it ending, False if it can’t.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="experimenteditor.models.Experiment.get_all_commands_list">
+<code class="descname">get_all_commands_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.Experiment.get_all_commands_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of every command that is associated with the experiment.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#experimenteditor.models.Command" title="experimenteditor.models.Command"><code class="xref py py-class docutils literal"><span class="pre">Command</span></code></a> objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.models.Command">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">Command</code><a class="headerlink" href="#experimenteditor.models.Command" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.Command.parent_experiment">
+<code class="descname">parent_experiment</code><a class="headerlink" href="#experimenteditor.models.Command.parent_experiment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>References the experiment that the command is in.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.Command.delay">
+<code class="descname">delay</code><a class="headerlink" href="#experimenteditor.models.Command.delay" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A Python <code class="docutils literal"><span class="pre">Decimal</span></code> object that supports numbers up to 99999.999999.  In practice, this will be 14400 (4 hours in seconds) or below (but not negative).  This sets when the command goes off, in seconds, relative to the start of the experiment.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.models.OneTimeSSSCommand">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">OneTimeSSSCommand</code><span class="sig-paren">(</span><em>experimenteditor.models.Command</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.OneTimeSSSCommand" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.OneTimeSSSCommand.command_choice">
+<code class="descname">command_choice</code><a class="headerlink" href="#experimenteditor.models.OneTimeSSSCommand.command_choice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A <code class="xref py py-class docutils literal"><span class="pre">django.db.models.ChoiceField</span></code> that internally stores what command they would like to execute and externally displays that command and what units the arguments are in (see <a class="reference internal" href="#experimenteditor.models.OneTimeSSSCommand.quantity" title="experimenteditor.models.OneTimeSSSCommand.quantity"><code class="xref py py-attr docutils literal"><span class="pre">quantity</span></code></a>)</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.OneTimeSSSCommand.quantity">
+<code class="descname">quantity</code><a class="headerlink" href="#experimenteditor.models.OneTimeSSSCommand.quantity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A <code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.SeperatedValuesField</span></code> that takes a comma-seperated list of values from the frontend. Normalizes to a Python list of strings. Is validated for number of arguments in <code class="file docutils literal"><span class="pre">experimenteditor/forms.py</span></code> on command creation/edit.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.OneTimeSSSCommand.is_repeated">
+<code class="descname">is_repeated</code><a class="headerlink" href="#experimenteditor.models.OneTimeSSSCommand.is_repeated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Deprecated, along with <code class="xref py py-attr docutils literal"><span class="pre">repeat_delay</span></code> and <code class="xref py py-attr docutils literal"><span class="pre">repeat_count</span></code> due to looping issues.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.models.CANCommand">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">CANCommand</code><span class="sig-paren">(</span><em>experimenteditor.models.Command</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.CANCommand" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.CANCommand.length">
+<code class="descname">length</code><a class="headerlink" href="#experimenteditor.models.CANCommand.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A <code class="xref py py-class docutils literal"><span class="pre">ChoiceField</span></code> that specifies the message length (from 0-8 bytes).</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANCommand.message">
+<code class="descname">message</code><a class="headerlink" href="#experimenteditor.models.CANCommand.message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The hexidecimal message string to be sent to the specified ID.  Due to the javascript in the CANCommand form, cannot be longer than 2 times the length (in characters).</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANCommand.message_id">
+<code class="descname">message_id</code><a class="headerlink" href="#experimenteditor.models.CANCommand.message_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The hexidecimal id string. Is only 8 characters long, no more, no less.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANCommand.interface">
+<code class="descname">interface</code><a class="headerlink" href="#experimenteditor.models.CANCommand.interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The interface (currently only can1 since we don’t know whether or not can0 will be useful) the message is sent to.  Stored as an integer (1, in this case).</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANCommand.is_extended_can">
+<code class="descname">is_extended_can</code><a class="headerlink" href="#experimenteditor.models.CANCommand.is_extended_can" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A boolean that determines if the message is extended CAN or not.  The setting of the first bit is taken care of by the <a class="reference internal" href="tasks.html#experimenteditor.tasks.send_experiment_json" title="experimenteditor.tasks.send_experiment_json"><code class="xref py py-func docutils literal"><span class="pre">experimenteditor.tasks.send_experiment_json()</span></code></a> task at send time.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.models.CANGenCommand">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">CANGenCommand</code><span class="sig-paren">(</span><em>experimenteditor.models.Command</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.CANGenCommand" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.interface">
+<code class="descname">interface</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#experimenteditor.models.CANCommand.interface" title="experimenteditor.models.CANCommand.interface"><code class="xref py py-attr docutils literal"><span class="pre">CANCommand.interface</span></code></a>.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.gap">
+<code class="descname">gap</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.gap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>The gap (in ms) between consecutive generated messages.  200 ms if left blank, can be 0 for ASAP message explosions.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.generate_extended_can">
+<code class="descname">generate_extended_can</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.generate_extended_can" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#experimenteditor.models.CANCommand.is_extended_can" title="experimenteditor.models.CANCommand.is_extended_can"><code class="xref py py-attr docutils literal"><span class="pre">CANCommand.is_extended_can</span></code></a>.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.send_rtr_frame">
+<code class="descname">send_rtr_frame</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.send_rtr_frame" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Boolean.  If you figure out what this is, add it to the docs.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.message_length">
+<code class="descname">message_length</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.message_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>0-8, blank for random, or ‘i’ for increasing.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.message_id">
+<code class="descname">message_id</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.message_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#experimenteditor.models.CANCommand.message_id" title="experimenteditor.models.CANCommand.message_id"><code class="xref py py-attr docutils literal"><span class="pre">CANCommand.message_id</span></code></a>, except can be left blank or set to “i” for increasing.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.can_data">
+<code class="descname">can_data</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.can_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>0-8 hex bytes, “i” for increasing, or leave blank for random data.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.CANGenCommand.number_of_can_frames_before_end">
+<code class="descname">number_of_can_frames_before_end</code><a class="headerlink" href="#experimenteditor.models.CANGenCommand.number_of_can_frames_before_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Specifies the number of CAN frames (sent? sent+received? just received?) before this CanGEN command terminates.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.models.ObservableQuantity">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">ObservableQuantity</code><a class="headerlink" href="#experimenteditor.models.ObservableQuantity" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.ObservableQuantity.related_experiment">
+<code class="descname">related_experiment</code><a class="headerlink" href="#experimenteditor.models.ObservableQuantity.related_experiment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Contains a reference to the <a class="reference internal" href="#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code></a> this plot is associated with.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.ObservableQuantity.related_run">
+<code class="descname">related_run</code><a class="headerlink" href="#experimenteditor.models.ObservableQuantity.related_run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Contains a reference to the <a class="reference internal" href="#experimenteditor.models.RunResult" title="experimenteditor.models.RunResult"><code class="xref py py-class docutils literal"><span class="pre">RunResult</span></code></a> this plot is associated with.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.ObservableQuantity.xdata">
+<code class="descname">xdata</code><a class="headerlink" href="#experimenteditor.models.ObservableQuantity.xdata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A <code class="xref py py-class docutils literal"><span class="pre">SeperatedValuesField</span></code> that contains all the x coordinates/timestamps.  Normalizes to a Python list of strings, so be sure to cast each element to a float before doing anything numeric.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.ObservableQuantity.ydata">
+<code class="descname">ydata</code><a class="headerlink" href="#experimenteditor.models.ObservableQuantity.ydata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A <code class="xref py py-class docutils literal"><span class="pre">SeperatedValuesField</span></code> that contains all the y coordinates of the scatter plot.  Right now can only visualize axle-based wheel speed in mph, so is guaranteed to be that.  Also normalizes to a list of strings.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.ObservableQuantity.entry">
+<code class="descname">entry</code><a class="headerlink" href="#experimenteditor.models.ObservableQuantity.entry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A reference to an <code class="xref py py-class docutils literal"><span class="pre">SPNPGNEntry</span></code> that specifies what SPN/PGN the plot is representing.</p>
+<dl class="attribute">
+<dt>
+<code class="descname">related_run</code></dt>
+<dd></dd></dl>
+
+<p>Specifies what <a class="reference internal" href="#experimenteditor.models.RunResult" title="experimenteditor.models.RunResult"><code class="xref py py-class docutils literal"><span class="pre">RunResult</span></code></a> object this observable quantity is bound to.  Is <code class="docutils literal"><span class="pre">None</span></code> on first creation through the “Visualize” page, but is assigned later on experiment schedule.</p>
+<dl class="function">
+<dt id="experimenteditor.models.ObservableQuantity.gen_plot_html">
+<code class="descname">gen_plot_html</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.models.ObservableQuantity.gen_plot_html" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Generates a plotly html div as a string to be used in a template.  Use the Django <code class="docutils literal"><span class="pre">safe</span></code> filter when displaying results of this method in templates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A string that contains div HTML to render a plot using plotly.js.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.models.RunResult">
+<em class="property">class </em><code class="descclassname">experimenteditor.models.</code><code class="descname">RunResult</code><a class="headerlink" href="#experimenteditor.models.RunResult" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="experimenteditor.models.RunResult.experiment">
+<code class="descname">experiment</code><a class="headerlink" href="#experimenteditor.models.RunResult.experiment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Contains a reference to the <a class="reference internal" href="#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code></a> this plot/log set is associated with.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.RunResult.event">
+<code class="descname">event</code><a class="headerlink" href="#experimenteditor.models.RunResult.event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Contains a reference to the associated <code class="xref py py-class docutils literal"><span class="pre">schedule.models.Event</span></code>.  This is used to get when the <a class="reference internal" href="#experimenteditor.models.RunResult" title="experimenteditor.models.RunResult"><code class="xref py py-class docutils literal"><span class="pre">RunResult</span></code></a> was created.</p>
+<dl class="attribute">
+<dt id="experimenteditor.models.RunResult.log">
+<code class="descname">log</code><a class="headerlink" href="#experimenteditor.models.RunResult.log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Contains the log for this experiment run, as a string.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CAN Experiment Frontend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="inst.html">Installation/Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="views.html">Views</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">Tasks</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="inst.html" title="previous chapter">(Re-)Installation and Quick Start</a></li>
+      <li>Next: <a href="views.html" title="next chapter">Views</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Ethan Robards.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/models.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

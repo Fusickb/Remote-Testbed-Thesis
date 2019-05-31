@@ -1,0 +1,220 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tasks &#8212; CAN Experiment Frontend 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="forms.html" />
+    <link rel="prev" title="Views" href="views.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tasks">
+<h1>Tasks<a class="headerlink" href="#tasks" title="Permalink to this headline">¶</a></h1>
+<p>Tasks are basically functions that can be called whenever and executed later, through the <code class="xref py py-attr docutils literal"><span class="pre">schedule</span></code> parameter of the task decorator.  You can pass in either a python <code class="docutils literal"><span class="pre">datetime</span></code> or a python <code class="docutils literal"><span class="pre">timedelta</span></code> through <code class="xref py py-attr docutils literal"><span class="pre">schedule</span></code> for absolute or relative timing.  For more on the inner workings of this system, see <cite>this documentation page &lt;http://django-background-tasks.readthedocs.io/en/latest/&gt;</cite></p>
+<div class="section" id="global-variables">
+<h2>Global Variables<a class="headerlink" href="#global-variables" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="experimenteditor.tasks.remindermessage">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">remindermessage</code><a class="headerlink" href="#experimenteditor.tasks.remindermessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A format string that constructs the email body of an email reminder message.  It takes two arguments, <code class="xref py py-attr docutils literal"><span class="pre">start_humanized</span></code> and <code class="xref py py-attr docutils literal"><span class="pre">end_humanized</span></code>, and those should contain the humanized period of time from now to the start and end of the event through <code class="xref py py-func docutils literal"><span class="pre">arrow.humanize()</span></code> .</p>
+<dl class="data">
+<dt id="experimenteditor.tasks.expfinishedmessage">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">expfinishedmessage</code><a class="headerlink" href="#experimenteditor.tasks.expfinishedmessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>A format string that constructs the (now-invisible) email body of the “this experiment has finished” message.  Takes two arguments: the title of the experiment through <code class="xref py py-attr docutils literal"><span class="pre">title</span></code> and the link to the results page through <code class="xref py py-attr docutils literal"><span class="pre">link</span></code> .</p>
+</div>
+<div class="section" id="urls">
+<h2>URLs<a class="headerlink" href="#urls" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="experimenteditor.tasks.ENGINEBEAGLEBONEIP">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">ENGINEBEAGLEBONEIP</code><a class="headerlink" href="#experimenteditor.tasks.ENGINEBEAGLEBONEIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This contains the URL that all experiments are POSTed to.  No <code class="xref py py-func docutils literal"><span class="pre">str.format()</span></code> arguments here.</p>
+<dl class="data">
+<dt id="experimenteditor.tasks.LOGGERIP">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">LOGGERIP</code><a class="headerlink" href="#experimenteditor.tasks.LOGGERIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Not so aptly named, this contains the url that gets the plot data for axle-based vehicle speed.  Feel free to rename.  Takes one <code class="xref py py-func docutils literal"><span class="pre">str.format()</span></code> argument, <code class="xref py py-attr docutils literal"><span class="pre">expname</span></code>, which should be the result of <a class="reference internal" href="models.html#experimenteditor.models.Experiment.slugify_name" title="experimenteditor.models.Experiment.slugify_name"><code class="xref py py-func docutils literal"><span class="pre">experimenteditor.models.Experiment.slugify_name()</span></code></a> .</p>
+<dl class="data">
+<dt id="experimenteditor.tasks.FULLLOGIP">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">FULLLOGIP</code><a class="headerlink" href="#experimenteditor.tasks.FULLLOGIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This contains the log ip.  Takes two <code class="xref py py-func docutils literal"><span class="pre">str.format()</span></code> arguments, <code class="xref py py-attr docutils literal"><span class="pre">expname</span></code> as described in <a class="reference internal" href="#experimenteditor.tasks.LOGGERIP" title="experimenteditor.tasks.LOGGERIP"><code class="xref py py-data docutils literal"><span class="pre">LOGGERIP</span></code></a>, and <code class="xref py py-attr docutils literal"><span class="pre">chunkidx</span></code> .</p>
+</div>
+<div class="section" id="task-functions">
+<h2>Task Functions<a class="headerlink" href="#task-functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="experimenteditor.tasks.send_experiment_reminder">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">send_experiment_reminder</code><span class="sig-paren">(</span><em>experimentid</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.tasks.send_experiment_reminder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a reminder email to the user associated with an experiment (if they decide to send one).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>experimentid</strong> (<em>int</em>) – The exp_pk of the experiment model that belongs to the user to be reminded.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="experimenteditor.tasks.send_experiment_json">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">send_experiment_json</code><span class="sig-paren">(</span><em>experimentid</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.tasks.send_experiment_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP POST an experiment to beaglebone 22.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>experimentid</strong> (<em>int</em>) – The <code class="xref py py-attr docutils literal"><span class="pre">Experiment.exp_pk</span></code> of the experiment to be POSTed.</td>
+</tr>
+</tbody>
+</table>
+<p>Note: if you want the error messages to be more user-side and verbose, use <code class="xref py py-func docutils literal"><span class="pre">notify.send()</span></code> like in the other tasks with <code class="xref py py-attr docutils literal"><span class="pre">level</span></code> set to ‘error’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="experimenteditor.tasks.make_experiment_available">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">make_experiment_available</code><span class="sig-paren">(</span><em>experimentid</em>, <em>runid</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.tasks.make_experiment_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>HTTP GET an experiment and any associated data the user requests through the “Visualize” page.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>experimentid</strong> (<em>int</em>) – The exp_pk of the experiment that has been completed.</li>
+<li><strong>runid</strong> (<em>int</em>) – The primary ky of the RunResult object that the log/plot data will be stored in.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="experimenteditor.tasks.send_complete_mail">
+<code class="descclassname">experimenteditor.tasks.</code><code class="descname">send_complete_mail</code><span class="sig-paren">(</span><em>experimentid</em>, <em>resultsurl</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.tasks.send_complete_mail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an email upon experiment competion to remind the user their experiment is done.  Currently sends the subject fine, but provides no body for some reason.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>experimentid</strong> (<em>int</em>) – The exp_pk of the experiment that just completed.</li>
+<li><strong>resultsurl</strong> (<em>str</em>) – The full absolute url, including domain name/IP address and protocol (http or https) that directs to a page where the user can view their results.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CAN Experiment Frontend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="inst.html">Installation/Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="views.html">Views</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tasks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#global-variables">Global Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#urls">URLs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#task-functions">Task Functions</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="views.html" title="previous chapter">Views</a></li>
+      <li>Next: <a href="forms.html" title="next chapter">&lt;no title&gt;</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Ethan Robards.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/tasks.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

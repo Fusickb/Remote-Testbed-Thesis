@@ -1,0 +1,36 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Create ECU Update{% endblock %}
+{% block content %}
+<h2 class="text-center">Add ECU Update</h2>
+<a class="btn btn-primary myexpbutton" href="{% url 'edit_experiment' exp_pk=experiment.exp_pk %}" type="link"><span class="glyphicon glyphicon-arrow-left"></span> Back to Experiment</a>
+<form action="" method="post">
+{% csrf_token %}
+{% bootstrap_form form %}
+{% bootstrap_form_errors form form_type='fields' %}
+{% bootstrap_button "Add" button_type="submit" icon="plus" button_class="btn-success" %}
+</form>
+<script type="text/javascript">
+$(document).ready(function (){
+		if($("#id_update_type").val() == 1){
+		$("#id_governor_speed").prop("disabled", true);
+		$("#id_vin").prop("disabled",false);
+		}
+		else if($("#id_update_type").val() == 2){
+			$("#id_vin").prop("disabled",true);
+			$("#id_governor_speed").prop("disabled", false);
+		}
+	}
+		);
+$('#id_update_type').change(function(){
+			if($("#id_update_type").val() == 1){
+		$("#id_governor_speed").prop("disabled", true);
+		$("#id_vin").prop("disabled",false);
+		}
+		else if($("#id_update_type").val() == 2){
+			$("#id_vin").prop("disabled",true);
+			$("#id_governor_speed").prop("disabled", false);
+		}			
+		});
+</script>
+{% endblock %}

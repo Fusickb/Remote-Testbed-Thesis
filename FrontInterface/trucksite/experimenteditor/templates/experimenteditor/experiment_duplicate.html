@@ -1,0 +1,12 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{% block extratitle %}Duplicate Experiment{% endblock %}
+{% block content %}
+<h2 class="text-center">Duplicate Experiment</h2>
+<a class="btn btn-primary myexpbutton" href="{% url 'my_experiments' %}" type="link"><span class="glyphicon glyphicon-arrow-left"></span> Back to My Experiments</a>
+<form action="" method="post">
+{% csrf_token %}
+{% bootstrap_form form %}
+{% bootstrap_form_errors form form_type='fields' %}
+{% bootstrap_button "Duplicate" button_type="submit" icon="plus" button_class="btn-info" %}
+{% endblock %}

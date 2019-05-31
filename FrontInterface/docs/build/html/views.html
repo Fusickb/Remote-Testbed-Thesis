@@ -1,0 +1,298 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Views &#8212; CAN Experiment Frontend 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tasks" href="tasks.html" />
+    <link rel="prev" title="Models" href="models.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="views">
+<h1>Views<a class="headerlink" href="#views" title="Permalink to this headline">¶</a></h1>
+<p>Note: All the views have LoginRequiredMixin in their class definitions so that non-authorized users get kicked out to the login page.</p>
+<p>This whole section is a lot of repetitive code, so I will, instead of documenting every single view, group them together and describe their differences.</p>
+<div class="section" id="templateviews">
+<h2>TemplateViews<a class="headerlink" href="#templateviews" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">TemplateView</span></code> s have the most variation amongst themselves, because viewing a template is such a generic action.</p>
+<dl class="class">
+<dt id="experimenteditor.views.MyExperimentsView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">MyExperimentsView</code><a class="headerlink" href="#experimenteditor.views.MyExperimentsView" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="function">
+<dt id="experimenteditor.views.MyExperimentsView.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.MyExperimentsView.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns a dictionary with one context variable: <code class="docutils literal"><span class="pre">experiments</span></code>, which contains a QuerySet of <a class="reference internal" href="models.html#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.Experiment</span></code></a> objects that belong to the viewing user.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.EditExperimentView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">EditExperimentView</code><a class="headerlink" href="#experimenteditor.views.EditExperimentView" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="function">
+<dt id="experimenteditor.views.EditExperimentView.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.EditExperimentView.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns a dictionary with four context variables: <code class="docutils literal"><span class="pre">experiment</span></code>, <code class="docutils literal"><span class="pre">commands</span></code>, <code class="docutils literal"><span class="pre">cancommands</span></code>, and <code class="docutils literal"><span class="pre">cangencommands</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">experiment</span></code> is the current experiment one is editing.</p>
+<p><code class="docutils literal"><span class="pre">commands</span></code> is a QuerySet of all the SSS commands (set speed, brake, end experiment, to name a few) tied to <code class="docutils literal"><span class="pre">experiment</span></code>.  <code class="docutils literal"><span class="pre">cancommands</span></code> and <code class="docutils literal"><span class="pre">cangencommands</span></code> serve a similar purpose to <code class="docutils literal"><span class="pre">commands</span></code>, but for the other two types of comands.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.DisplayResultsView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">DisplayResultsView</code><a class="headerlink" href="#experimenteditor.views.DisplayResultsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the view that displays all the plots, if there are any.</p>
+<dl class="function">
+<dt id="experimenteditor.views.DisplayResultsView.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.DisplayResultsView.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns a dictionary with three context variables: <code class="docutils literal"><span class="pre">experiment</span></code>, <code class="docutils literal"><span class="pre">run</span></code>, and <code class="docutils literal"><span class="pre">plots</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">experiment</span></code> contains the current <code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code> , <code class="docutils literal"><span class="pre">run</span></code> contains the current <code class="xref py py-class docutils literal"><span class="pre">RunResult</span></code> , and <code class="docutils literal"><span class="pre">plots</span></code> is a list of html strings that are generated by <code class="xref py py-func docutils literal"><span class="pre">ObservableQuantity.gen_plot_html()</span></code> .</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.LogDownloadView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">LogDownloadView</code><a class="headerlink" href="#experimenteditor.views.LogDownloadView" title="Permalink to this definition">¶</a></dt>
+<dd><p>This view allows users to download csv logs of their experiments.</p>
+<dl class="function">
+<dt id="experimenteditor.views.LogDownloadView.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.LogDownloadView.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#experimenteditor.views.DisplayResultsView" title="experimenteditor.views.DisplayResultsView"><code class="xref py py-class docutils literal"><span class="pre">DisplayResultsView</span></code></a> for what <code class="docutils literal"><span class="pre">experiment</span></code> and <code class="docutils literal"><span class="pre">run</span></code> are.</p>
+<dl class="function">
+<dt id="experimenteditor.views.LogDownloadView.render_to_response">
+<code class="descname">render_to_response</code><span class="sig-paren">(</span><em>context</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.LogDownloadView.render_to_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Renders the log as a <code class="docutils literal"><span class="pre">text/csv</span></code> attachment from the current <code class="xref py py-class docutils literal"><span class="pre">RunResult</span></code> object.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="createviews">
+<h2>CreateViews<a class="headerlink" href="#createviews" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">CreateView</span></code> creates a model from user information through a form.</p>
+<p>The <code class="xref py py-func docutils literal"><span class="pre">CreateView.form_valid()</span></code> function is called when the user POSTs a valid form, and redirects to a success url.  You can override this implementation and call the superclass’ <code class="xref py py-func docutils literal"><span class="pre">form_valid()</span></code> to alter the success url or shove in some view-only data.</p>
+<dl class="class">
+<dt id="experimenteditor.views.CreateExperimentView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">CreateExperimentView</code><a class="headerlink" href="#experimenteditor.views.CreateExperimentView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an empty Experiment, given a title.</p>
+<dl class="function">
+<dt id="experimenteditor.views.CreateExperimentView.form_valid">
+<code class="descname">form_valid</code><span class="sig-paren">(</span><em>form</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.CreateExperimentView.form_valid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Adds the current viewing user to the <code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code> instance and redirects back to the “My Experiments” page.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.DuplicateExperimentView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">DuplicateExperimentView</code><a class="headerlink" href="#experimenteditor.views.DuplicateExperimentView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicates an experiment for easy editing while an experiment is running.</p>
+<dl class="function">
+<dt id="experimenteditor.views.DuplicateExperimentView.get_success_url">
+<code class="descname">get_success_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.DuplicateExperimentView.get_success_url" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns the absolute url to the “My Experiments” page.  Used in the default <code class="xref py py-func docutils literal"><span class="pre">form_valid()</span></code> implementation.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.CreateCommandView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">CreateCommandView</code><a class="headerlink" href="#experimenteditor.views.CreateCommandView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an SSS command.  The other two <code class="docutils literal"><span class="pre">CreateView</span></code> s that share this general format are <code class="xref py py-class docutils literal"><span class="pre">CreateCanCommandView</span></code> and <code class="xref py py-class docutils literal"><span class="pre">CreateCanGenCommandView</span></code> , which create models based on their names.</p>
+<dl class="function">
+<dt id="experimenteditor.views.CreateCommandView.get_initial">
+<code class="descname">get_initial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.CreateCommandView.get_initial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Sets the initial form data.  <code class="docutils literal"><span class="pre">parent_experiment</span></code> is a hidden form field that associates the newly created command with an experiment.</p>
+<dl class="function">
+<dt id="experimenteditor.views.CreateCommandView.form_valid">
+<code class="descname">form_valid</code><span class="sig-paren">(</span><em>form</em><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.CreateCommandView.form_valid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This is another way to set the post-form success url, by setting the <code class="xref py py-attr docutils literal"><span class="pre">self.success_url</span></code> attribute before calling the superclass’ <a class="reference internal" href="#experimenteditor.views.CreateCommandView.form_valid" title="experimenteditor.views.CreateCommandView.form_valid"><code class="xref py py-func docutils literal"><span class="pre">form_valid()</span></code></a> .  The other two command <code class="docutils literal"><span class="pre">CreateView</span></code> s work similarly.</p>
+<dl class="function">
+<dt id="experimenteditor.views.CreateCommandView.get_context_data">
+<code class="descname">get_context_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.CreateCommandView.get_context_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>See <a class="reference internal" href="#experimenteditor.views.DisplayResultsView" title="experimenteditor.views.DisplayResultsView"><code class="xref py py-class docutils literal"><span class="pre">DisplayResultsView</span></code></a> for what <code class="docutils literal"><span class="pre">experiment</span></code> is.  <code class="docutils literal"><span class="pre">experiment</span></code> is the only key in this dictionary besides <code class="docutils literal"><span class="pre">form</span></code>, which has callable methods that can display the form and should never be touched.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.ScheduleExperimentFormView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">ScheduleExperimentFormView</code><a class="headerlink" href="#experimenteditor.views.ScheduleExperimentFormView" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class creates several things.  Its form takes two <code class="docutils literal"><span class="pre">datetime</span></code> s, and spits out the following, if there are no conflicts:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>An <code class="xref py py-class docutils literal"><span class="pre">schedule.models.Event</span></code> object that contains the start and end times, and allows it to be displayed on the calendar.</li>
+<li>A <code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.ExperimentSchedulingInfo</span></code> object that links the experiment to the event and contains any email reminder information, if applicable.</li>
+<li>A <a class="reference internal" href="models.html#experimenteditor.models.RunResult" title="experimenteditor.models.RunResult"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.RunResult</span></code></a> object that will eventually store the data/logs.</li>
+<li>A <a class="reference internal" href="models.html#experimenteditor.models.ObservableQuantity" title="experimenteditor.models.ObservableQuantity"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.ObservableQuantity</span></code></a> object that is associated with the scheduled <code class="xref py py-class docutils literal"><span class="pre">Experiment</span></code> and newly created <code class="xref py py-class docutils literal"><span class="pre">RunResult</span></code> for each checkbox the user has ticked on the “Visualize” page.</li>
+</ol>
+</div></blockquote>
+<p>It also starts a <a class="reference internal" href="tasks.html#experimenteditor.tasks.send_experiment_json" title="experimenteditor.tasks.send_experiment_json"><code class="xref py py-func docutils literal"><span class="pre">experimenteditor.tasks.send_experiment_json()</span></code></a> task scheduled for 30 seconds before the event starts.  The source for this can be found in <code class="file docutils literal"><span class="pre">experimenteditor/forms.py</span></code> in the associated form’s <code class="xref py py-func docutils literal"><span class="pre">clean()</span></code> and <code class="xref py py-func docutils literal"><span class="pre">save()</span></code> methods.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="updateviews">
+<h2>UpdateViews<a class="headerlink" href="#updateviews" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">UpdateView</span></code> s are very similar to <code class="docutils literal"><span class="pre">CreateView</span></code> s except that they have one extra method: <code class="xref py py-func docutils literal"><span class="pre">get_object()</span></code> that can be overridden and returns the object to be updated.  To find the object, it also has a <code class="xref py py-attr docutils literal"><span class="pre">pk_url_kwarg</span></code> attribute that tells django which url parameter has the correct primary key of the model to be updated.</p>
+<p>The <code class="xref py py-func docutils literal"><span class="pre">get_context_data()</span></code> method also has an extra context variable, <code class="docutils literal"><span class="pre">object</span></code> that contains the object to be edited.</p>
+<dl class="class">
+<dt id="experimenteditor.views.UpdateCommandView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">UpdateCommandView</code><a class="headerlink" href="#experimenteditor.views.UpdateCommandView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows a user to edit a command.  <code class="xref py py-class docutils literal"><span class="pre">UpdateCanCommandView</span></code> and <code class="xref py py-class docutils literal"><span class="pre">UpdateCanGenCommandView</span></code> work the same way, except with their respective kind of command.</p>
+<p>See <a class="reference internal" href="#experimenteditor.views.CreateCommandView" title="experimenteditor.views.CreateCommandView"><code class="xref py py-class docutils literal"><span class="pre">CreateCommandView</span></code></a> for more details on context variables and the like.</p>
+<dl class="function">
+<dt id="experimenteditor.views.UpdateCommandView.get_object">
+<code class="descname">get_object</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.UpdateCommandView.get_object" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Gets the object from the url.  <code class="docutils literal"><span class="pre">pk2</span></code> is the url keyword argument for all three types of commands.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="deleteviews">
+<h2>DeleteViews<a class="headerlink" href="#deleteviews" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">DeleteView</span></code> s are somewhat similar to <code class="docutils literal"><span class="pre">UpdateView</span></code> s in structure, but on success delete the model specified instead of updating its properties.</p>
+<dl class="class">
+<dt id="experimenteditor.views.DeleteCommandView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">DeleteCommandView</code><a class="headerlink" href="#experimenteditor.views.DeleteCommandView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a user to a confirmation page, asking them if they want to delete the specified command.  If the user POSTs by pressing the confirm button, the command is wiped from the database.  Otherwise, if they hit cancel, they go back to the “Edit Experiment” page.</p>
+<p>All methods in this class are basically copy-pasted from <a class="reference internal" href="#experimenteditor.views.CreateCommandView" title="experimenteditor.views.CreateCommandView"><code class="xref py py-class docutils literal"><span class="pre">CreateCommandView</span></code></a> and <code class="xref py py-class docutils literal"><span class="pre">UpdateCanCommandView</span></code> , so see either if you’re confused about how these work.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="experimenteditor.views.ConfirmExperimentDeleteView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">ConfirmExperimentDeleteView</code><a class="headerlink" href="#experimenteditor.views.ConfirmExperimentDeleteView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Like <a class="reference internal" href="#experimenteditor.views.DeleteCommandView" title="experimenteditor.views.DeleteCommandView"><code class="xref py py-class docutils literal"><span class="pre">DeleteCommandView</span></code></a>, but for <a class="reference internal" href="models.html#experimenteditor.models.Experiment" title="experimenteditor.models.Experiment"><code class="xref py py-class docutils literal"><span class="pre">experimenteditor.models.Experiment</span></code></a> objects.  Also deletes all commands tied to the experiment.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="listview-s">
+<h2>ListView(s)<a class="headerlink" href="#listview-s" title="Permalink to this headline">¶</a></h2>
+<p>The one <code class="docutils literal"><span class="pre">ListView</span></code> that exists is <a class="reference internal" href="#experimenteditor.views.RunResultListView" title="experimenteditor.views.RunResultListView"><code class="xref py py-class docutils literal"><span class="pre">RunResultListView</span></code></a> , which is like an <code class="docutils literal"><span class="pre">UpdateView</span></code> , but it has a <code class="xref py py-func docutils literal"><span class="pre">get_queryset()</span></code> method that returns a queryset of models in a context variable called <code class="docutils literal"><span class="pre">object_list</span></code>.</p>
+<p>Also, nothing changes as a result of POSTing to the list view.  It just lists a bunch of models of the same type in whatever way you want.</p>
+<p>Feel free to rework the <a class="reference internal" href="#experimenteditor.views.MyExperimentsView" title="experimenteditor.views.MyExperimentsView"><code class="xref py py-class docutils literal"><span class="pre">MyExperimentsView</span></code></a> as a <code class="docutils literal"><span class="pre">ListView</span></code>, if you are so inclined.</p>
+<dl class="class">
+<dt id="experimenteditor.views.RunResultListView">
+<em class="property">class </em><code class="descclassname">experimenteditor.views.</code><code class="descname">RunResultListView</code><a class="headerlink" href="#experimenteditor.views.RunResultListView" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="function">
+<dt id="experimenteditor.views.RunResultListView.get_queryset">
+<code class="descname">get_queryset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#experimenteditor.views.RunResultListView.get_queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>Returns a queryset consiting of all the RunResult objects associated with the experiment pk in the url.  This is what each row in the table of the “View Results” page is.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">CAN Experiment Frontend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="inst.html">Installation/Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Views</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#templateviews">TemplateViews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#createviews">CreateViews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#updateviews">UpdateViews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deleteviews">DeleteViews</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#listview-s">ListView(s)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tasks.html">Tasks</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="models.html" title="previous chapter">Models</a></li>
+      <li>Next: <a href="tasks.html" title="next chapter">Tasks</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Ethan Robards.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/views.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 scheduletags %}
+{% block extratitle %}Scheduling Experiment{% endblock %}
+{% block content %}
+{% bootstrap_button "Back To My Experiments" icon="arrow-left" button_type="link" href="/experimenteditor/myexperiments" button_class="btn-primary" extra_classes="myexpbutton" %}
+<div class="row center-block calendar-title">
+    <h2>Experiment Calendar</h2>
+    {% prevnext "schedule_week" experiment.exp_pk calendar period "\W\e\ek W, M Y" %}
+    <div class="now">
+      <a href="{% url 'schedule_week' experiment.exp_pk calendar.slug %}">
+        This Week
+      </a>
+    </div>
+</div>
+
+<div class="row center-block">
+  {% for day in period.get_days %}
+    <div class="col-md-3">
+      <div class="row center-block">
+        <h4>
+          {{day.start|date:"l, M jS"}}
+        </h4>
+      </div>
+      {% if forloop.first %}
+          {% daily_table day %}
+      {% else %}
+          {% daily_table day %}
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,16 @@
+/trucksite/db.sqlite3
+*.pl
+*.csv
+/trucksite/jsonposttest.py
+/trucksite/assets
+*.pyc
+/trucksite/experimentscheduler/
+/trucksite/logprinter
+/Include
+/Lib
+/Scripts
+pyvenv.cfg
+/include
+/lib
+/lib64
+/bin

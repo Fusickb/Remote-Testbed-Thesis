@@ -1,0 +1,15 @@
+{% load static bootstrap3 %}
+{% block head %}
+<script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<link rel="stylesheet" type="text/css" href="{% static 'experimenteditor/style.css' %}">
+<title>{% block title %} {% endblock %}</title>
+{% endblock %}
+<div id="contentwrapper">
+{% block content %}
+{% endblock %}
+</div>

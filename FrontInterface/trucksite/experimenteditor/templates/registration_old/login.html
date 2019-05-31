@@ -1,0 +1,26 @@
+{% extends "experimenteditor/base.html" %}
+{% load bootstrap3 %}
+{% block extratitle %}Login{% endblock %}
+{% block content %}
+{% if next %}
+    {% if user.is_authenticated %}
+    <div class="well well-lg">
+    <p class="text-danger"><small>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</small></p>
+    </div>
+    {% else %}
+    <div class="well well-lg">
+    <p class = "text-danger">Please login to see this page.</p>
+    </div>
+    {% endif %}
+{% endif %}
+
+<form id="loginform" method="post" action="{% url 'login' %}">
+{% csrf_token %}
+{% bootstrap_form form %}
+{% buttons submit="Login"%}{%endbuttons%}
+<input type="hidden" name="next" value="{{next}}" />
+<a class='btn btn-primary' href="{% url 'registration_register' %}">{% bootstrap_icon 'star' %} Register</a><br><br>
+<a class='btn btn-warning' href="{% url 'password_reset' %}">{% bootstrap_icon 'question-sign' %} Forgot Password</a>
+</form>
+{% endblock %}

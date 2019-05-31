@@ -1,0 +1,155 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 tz notifications_tags static %}
+{% block extratitle %}Live Data{% endblock %}
+{% block extrahead %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+{% endblock %}
+{% block content %}
+{% bootstrap_button "My Experiments" icon="arrow-left" button_type="link" href="/experimenteditor/myexperiments" button_class="btn-primary" extra_classes="myexpbutton" %}
+<div class="page-header"><h1 class="text-center">Live Data</h1></div>
+<a class="btn btn-danger logoutbutton" href="{% url 'auth_logout' %}" type="link"><span class="glyphicon glyphicon-log-out"></span> Log Out</a>
+<div class="text-center">
+	<a class="btn btn-success" align="center" href="{% url 'live_plots' %}" type="link"><span class="glyphicon glyphicon-eye-open"></span> Live Plots</a>
+</div>
+<br><br>
+<form>
+	ID: <input type="text" name="filteredID" value="any" id="filteredID">
+</form>
+<div style="overflow: auto;max-height: 500px">
+<table id="data-table" class="table table-bordered table-striped">
+	<thead>
+	<tr>
+		<th>Identifier (hex)</th>
+		<th>Priority (dec)</th>
+		<th>PGN (dec)</th>
+		<th>DA (dec)</th>
+		<th>SA (dec)</th>
+		<th class="larger">Message (hex)</th>
+	</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+</div>
+<script type="text/javascript">
+	function updateRow(rowNum, canID, data){
+		var row = document.getElementById("data-table").rows[rowNum].cells;
+		row[0].innerHTML = canID;
+		row[5].innerHTML = data;
+	}
+	function addRow(canID, data){
+		var identifier;
+		identifier = ((parseInt(canID.substring(0,2),16)>>2)&0b111).toString();
+
+		var pgnNum,pgn,da;
+		pgnNum = parseInt(canID.substring(2,6),16);
+		if(pgnNum < 0xF000){
+			pgn = canID.substring(2,4)+"00";
+			da = canID.substring(4,6);
+		}
+		else{
+			pgn = canID.substring(2,6);
+			da = "FF";
+		}
+		var sa;
+		sa = canID.substring(6,8);
+
+		pgn = parseInt(pgn,16).toString();
+		da = parseInt(da,16).toString();
+		sa = parseInt(sa,16).toString();
+
+		var row = document.getElementById("data-table").insertRow(1);
+		row.insertCell(0).innerHTML = canID;
+		row.insertCell(1).innerHTML = identifier;
+		row.insertCell(2).innerHTML = pgn;
+		row.insertCell(3).innerHTML = da;
+		row.insertCell(4).innerHTML = sa;
+		row.insertCell(5).innerHTML = data;
+	}
+
+	var url = "http://129.244.254.21:8080/stream/start/";
+	$.ajaxSetup({
+			crossdomain: true,
+			url: url,
+			dataType: 'jsonp'
+		});
+	
+	function updateTable() {
+		$.ajax({success: function(jsondata){
+			var i;
+			for (i=0; i<jsondata.data.length;i++){
+				var currentMsg;
+				currentMsg = jsondata.data[i][1].split(" ");
+				var currentID,filteredID;
+				currentID = currentMsg[1];
+				filteredID = document.getElementById("filteredID").value;
+				if ((filteredID.localeCompare("any")==0) ||(filteredID.localeCompare(currentID)==0)){
+					var j;
+					var currentData = "";
+					for (j=3; j<10;j++){
+						currentData+=currentMsg[j]+" ";
+					}
+					currentData+=currentMsg[10];
+					addRow(currentID, currentData);
+				};
+			}
+		},
+		error: function(xhr, status, error){
+				console.log(JSON.parse(xhr.responseText));
+				console.log(status)
+				alert(error.message);
+			}
+		});
+	};
+	setInterval(function(){updateTable();}, 200);
+
+</script>
+
+<div class="center-block">
+	<h2 class="text-center">Commands</h2>
+</div>
+<div class="center-block" style="text-align: center">
+	Speed: <input type="text" style="margin:0 auto;color:black" id="axleSpeed" value="0"> (mph) </br></br>
+	<button class = "btn btn-danger" style = "color:black" id="dosBtn" name="dos" onclick="dosAtt()">DoS</button></br></br>
+	<button class = "btn btn-success" id="ijnBtn" name="ijn" style = "color:black" onclick="ijnAtt()">Injection</button></br>
+</div>
+<script type="text/javascript">
+	var url = "http://129.244.254.22:8080/set/speed/";
+	var dosUrl = "http://129.244.254.22:8080/attack/dos/";
+	var ijnUrl = "http://129.244.254.22:8080/attack/injection/";
+	var data;
+	function dosAtt(){
+		$.ajax({
+			url: dosUrl,
+			dataType: 'json',
+			type: "post",
+			data: {},
+		});
+	};
+	function ijnAtt(){
+		$.ajax({
+			url: ijnUrl,
+			dataType: 'json',
+			type: "post",
+			data: {},
+		});
+	}
+	function updateSpeed(speed){
+		data = {"Speed": document.getElementById("axleSpeed").value};
+		$.ajax({
+			url: url,
+			dataType: 'json',
+			type: "post",
+			data: speed,
+		});
+	};
+	setInterval(function(){updateSpeed(data);},1000);
+
+</script>
+</form>
+<br></br>
+<div class="text-center">
+	<a class="btn btn-primary" align="center" href="{% url 'pin_settings' %}" type="link"><span class="glyphicon glyphicon-wrench">
+		</span> Pin Settings</a>
+</div>
+{% endblock %}

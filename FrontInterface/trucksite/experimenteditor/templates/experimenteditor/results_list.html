@@ -1,0 +1,37 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 tz %}
+{%block extratitle%}Run History - {{experiment.experiment_title}}{% endblock %}
+{% block content %}
+{% bootstrap_button "Log Out" icon="log-out" button_type="link" href="/accounts/logout" button_class='btn-danger' extra_classes="logoutbutton"%}
+{% bootstrap_button "My Experiments" icon="arrow-left" button_type="link" href="/experimenteditor/myexperiments" button_class="btn-primary" extra_classes="myexpbutton" %}
+<h2 class="text-center">Run History For {{experiment.experiment_title}}</h2>
+{% if object_list %}
+<table class='table table-hover'>
+	<thead>
+		<th>Experiment Start Time</th>
+		<th>Log File</th>
+		<th>NMFTA Log File</th>
+		<th>Plots</th>
+	</thead>
+	<tbody>
+		{% for runresult in object_list %}
+		<tr>
+		{% localtime on %}
+		<td class="text-center">{{runresult.event.start|date:"D d M Y h:i:s A"}}</td>
+		{% endlocaltime %}
+		<td><a href="{% url 'download_log' exp_pk=runresult.experiment.exp_pk runpk=runresult.pk %}" class="btn btn-info {% if not runresult.log %} disabled {% endif %} text-center">{% bootstrap_icon 'circle-arrow-down' %} Download Log</a></td>
+		<td><a class="btn btn-info {% if not runresult.log %} disabled {% endif %} text-center" href="{% url 'download_nmfta_log' exp_pk=runresult.experiment.exp_pk runpk=runresult.pk %}">{% bootstrap_icon 'circle-arrow-down' %} Download NMFTA Log</a></td>
+		<td><a href="{% url 'display_results' exp_pk=runresult.experiment.exp_pk runpk=runresult.pk %}" class="btn btn-info text-center">{% bootstrap_icon 'eye-open' %} View Plots</a>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<script type="text/javascript">
+	function downloadNMFTA(){
+		console.log("Well Hello There");
+	};
+</script>
+{% else %}
+<p>Nothing to see here...</p>
+{% endif %}
+{%endblock%}

@@ -1,0 +1,11 @@
+{% extends 'experimenteditor/base.html' %}
+{% load bootstrap3 %}
+{%block content%}
+<h2 class="text-center">Create Experiment</h2>
+<form action="" method="post">
+	{% csrf_token %}
+	{% bootstrap_form form %}
+	{% bootstrap_form_errors form type='fields'%}
+	{% bootstrap_button "Create" button_type="submit" icon="plus" button_class="btn-success" %}
+</form>
+{% endblock %}
