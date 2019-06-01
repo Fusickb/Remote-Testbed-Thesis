@@ -1,0 +1,337 @@
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+  margin: 0;
+}
+.label-back {
+  position: relative;
+  top: -3px;
+}
+.label-back i {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  margin: 0 -4px;
+  position: relative;
+  top: 2px;
+}
+.list-group-form {
+  float: right;
+  margin-top: -1px;
+}
+.list-group-form + .label {
+  margin-right: 5px;
+}
+.default-select-item {
+  position: relative;
+}
+.default-select-item:hover .default-select-btn {
+  display: block;
+}
+.default-select-current,
+.default-select-btn {
+  position: absolute;
+  right: 4px;
+  top: 2px;
+}
+.default-select-current {
+  pointer-events: none;
+}
+.default-select-btn {
+  display: none;
+}
+.popover-content > dl {
+  margin-bottom: 0;
+}
+.fla-info {
+  padding-top: 9px;
+}
+.fla-info .dl-horizontal {
+  margin-bottom: 0;
+}
+@media (min-width: 568px) {
+  .dl-horizontal.dl-compressed dt {
+    width: 400px;
+  }
+  .dl-horizontal.dl-compressed dd {
+    margin-left: 210px;
+  }
+}
+select.tall-input,
+textarea.tall-input {
+  height: 400px;
+}
+.report-header {
+  text-align: center;
+}
+.report-header + .page-header {
+  margin: 0;
+  border: none;
+}
+.report-address-header {
+  margin: 0;
+  color: #808080;
+}
+.table-container.panel-table,
+.download-report-section .panel-body .table-container {
+  margin-right: -16px;
+  margin-left: -16px;
+}
+.download-report-panel .panel-body {
+  padding-bottom: 3px;
+}
+.page-header {
+  margin-top: 30px;
+}
+.page-header + .page-sub-header {
+  padding-bottom: 13px;
+  padding-top: 8px;
+  border-bottom: 1px solid #eee;
+  margin-top: -21px;
+  background: #fff;
+}
+.page-sub-header {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+}
+.alert-icon {
+  float: left;
+  font-size: 3.5em;
+  margin-right: 10px;
+}
+.select2-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+.controls .select2-container.select2-container-multi {
+  width: 100%;
+  max-width: 100%;
+}
+.header-extra {
+  overflow: hidden;
+}
+.header-extra .point {
+  margin-left: 15px;
+}
+.table-source-alert {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+.panel-title {
+  font-size: 1.4em;
+}
+.panel-full {
+  margin: 0 -15px 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.part-heading {
+  border-bottom: 1px solid #ddd;
+  margin-top: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background: -webkit-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: -moz-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: -o-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: -ms-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: linear-gradient(to bottom, #fff 0%, #efefef 100%);
+}
+.part-heading + .part-body > .table-container {
+  margin-top: -11px;
+}
+.part-title {
+  font-size: 1.2em;
+}
+.part-body .raw-bytes-part {
+  margin-top: 10px;
+  padding-bottom: 4px;
+}
+.part-body .table-part {
+  margin-top: 10px;
+}
+.part-body .table-part .table {
+  margin-bottom: 0px;
+}
+.part-sub-section {
+  -webkit-box-shadow: inset 0 -5px 5px rgba(0,0,0,0.02);
+  box-shadow: inset 0 -5px 5px rgba(0,0,0,0.02);
+  background: -webkit-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: -moz-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: -o-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: -ms-linear-gradient(top, #fff 0%, #efefef 100%);
+  background: linear-gradient(to bottom, #fff 0%, #efefef 100%);
+  padding-top: 2px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+}
+.part-sub-heading + .pull-right,
+.part-sub-heading {
+  font-size: 1em;
+  margin-top: 10px;
+}
+.table .incident-zero {
+  background: #ffe6e6;
+}
+#section_navigation {
+  margin-bottom: 10px;
+}
+.part-heading h3,
+.part-heading h4 {
+  margin-top: 0;
+}
+.header-time {
+  margin-left: 10px;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 2px 8px;
+}
+.panel-tabs {
+  margin: 0 -15px;
+  padding: 0 15px;
+}
+.panel-tabs > li a {
+  border-color: #ddd;
+}
+.panel-tabs .btn-tab {
+  margin-bottom: 4px;
+}
+.panel-tabs .btn-tab > a {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 7px 15px;
+}
+.operator-display .help-block {
+  display: none;
+}
+.operator-display .form-group {
+  margin-bottom: 0;
+  margin-top: -10px;
+}
+.control-label,
+.form-control-static {
+  padding-top: 0;
+}
+@media print {
+  body {
+    margin: 0;
+  }
+  .download-report-panel {
+    page-break-before: avoid;
+    page-break-after: avoid;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+  }
+  .download-report-panel .tab-content > .tab-pane {
+    display: block;
+    visibility: visible;
+  }
+  .download-report-panel .highcharts-container {
+    margin-left: -25px;
+  }
+  .download-report-panel .section-part {
+    page-break-inside: avoid;
+  }
+  .print-title:after {
+    content: " (" attr(data-print-title) ")";
+  }
+}
+#gps_map {
+  min-height: 300px;
+}
+#gps_map > div {
+  min-height: 300px;
+}
+@media print {
+  #report a[href]:after {
+    content: "";
+  }
+}
+.pagination {
+  display: block;
+}
+.list-package-group .list-group-item-text {
+  clear: left;
+}
+.list-package-group .list-group-item-text p:last-of-type {
+  margin-bottom: 0;
+}
+.list-package-group .close .glyphicon-ok {
+  font-size: 12px;
+  top: -2px;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+.mynavbar {
+    text-align:center;
+}
+.mynavbar .nav {
+    float:none;
+}
+.mynavbar .nav li {
+    display:inline-block;
+    float:none;
+    margin:0 20px;
+    vertical-align:middle;
+}
+.mynavbar .nav li a {
+    border-radius:10px;
+    background:orange;
+    color:#fff;
+}
+.mynavbar .nav li a:hover {
+    background:red
+}
+.mynavbar .nav li.mylogo a, .mynavbar .nav li.mylogo a:hover {
+    background:transparent;
+    max-width:150px;
+}
+.mynavbar .nav li.mylogo a img {
+    width:100%;
+    height:auto;
+    vertical-align:middle;
+    display:inline-block;
+}
+.navbar-brand {
+    display:none
+}
+ @media screen and (max-width:768px) {
+.navbar-brand {
+    display:inline
+}
+.mynavbar .nav li {
+    display:block;
+    margin:0
+}
+.mynavbar .nav li a {
+    border-radius:0;
+    display:block;
+    border-bottom:1px solid #fff
+}
+.mynavbar li.mylogo {
+    display:none
+}
+}
+.table-borderless tbody tr td, .table-borderless tbody tr th, .table-borderless thead tr th {
+    border: none;
+}
+.btn-block {
+    padding: 50% 0; 
+}

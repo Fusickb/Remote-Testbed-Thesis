@@ -1,0 +1,96 @@
+import tornado.web
+from tornado import httpclient
+from tornado.web import MissingArgumentError
+from jinja2 import Environment, FileSystemLoader
+import tornado.web
+import os, os.path
+import wtforms
+from wtforms_tornado import Form
+import urllib
+import random
+import string
+import re
+import sys, inspect
+import requests
+import arrow
+import time
+import csv
+import json
+from NSFsettings import *
+from NSFutilities import *
+from ExperimentHandler import ExperimentScheduler, Experiment
+# Handler for main page
+class MainHandler(tornado.web.RequestHandler):
+
+    def getContext(self, **kwargs):
+        context = {}
+        context.update(kwargs)
+        context.update(JINJA2_SETTINGS)
+        pages = []
+        # import ipdb;ipdb.set_trace()
+        for name, obj in inspect.getmembers(sys.modules[__name__]):
+            if inspect.isclass(obj):
+                try:
+                    new_page = {'name': obj.PAGE_NAME, 'desc': obj.PAGE_DESCRIPTION, 'url': obj.PAGE_URL, 'pos': obj.PAGE_POS}
+                    if self.PAGE_NAME == obj.PAGE_NAME:
+                        new_page.update({'navclass':'active'})
+                    else:
+                        new_page.update({'navclass':''})
+                    pages.append(new_page)
+                except AttributeError:
+                    pass
+        context.update({'pages': pages})
+        return context
+
+    def get(self, **kwargs):
+        context = {}
+        context.update(self.getContext(**kwargs))
+        try:
+            context.update({'foo': self.foo, 'muck':self.muck})
+        except AttributeError:
+            pass
+        templateLoader = FileSystemLoader( searchpath=BASEDIR + "templates/" )
+        templateEnv = Environment( loader=templateLoader )
+        template = templateEnv.get_template(self.TEMPLATE_FILE)
+        html_output = template.render(title="NSF", **context)
+        # Returns rendered template string to the browser request
+        #self.write(str(context['log_data']))
+        self.write(html_output)
+#---- PAGES ----
+
+class REDIRECT(tornado.web.RequestHandler):
+    def prepare(self):
+        if self.request.protocol == "http":
+            self.redirect("https://%s" % self.request.full_url()[len("http://"):], permanent=True)
+
+    def get(self):
+        self.write("Hello, world")
+
+class Index(MainHandler):
+    TEMPLATE_FILE = "log.jinja"
+    PAGE_NAME = "Home"
+    PAGE_URL = '/'
+    PAGE_POS = 0
+
+    def getContext(self, **kwargs):
+        context = super(Index, self).getContext(**kwargs)
+        try: 
+            context.update({'log_data' : get_log_segment(self.get_arguments('offset')[0], self.get_arguments('delay')[0])})
+        except IndexError:
+            self.write("Incorrect Argument")
+        return context
+
+    def get(self, **kwargs):
+        return super(Index, self).get(**kwargs)
+
+    def post(self, **kwargs):
+        try:
+            request = self.request
+        except MissingArgumentError:
+            pass
+        post = json.loads(request.body)
+        experiment = {experiment.update({post['Info']})
+        experiment.update({post['Commands']})
+        experiment_object = Experiment(experiment)
+        scheduler = ExperimentScheduler(experiment_object)
+        scheduler.start()

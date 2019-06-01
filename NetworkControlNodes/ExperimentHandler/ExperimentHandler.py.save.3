@@ -1,0 +1,144 @@
+
+from datetime import datetime, timedelta
+from apscheduler.schedulers.tornado import TornadoScheduler
+from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
+from SerialFunctions import *
+from canTools import *
+from tornado import gen
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+import json
+import requests
+import arrow
+
+EXP_START_LOG_URL = 'http://129.244.254.21:8080/log/start/'
+PROCESS_LIST = []
+
+class ExperimentScheduler():
+        def __init__(self, Experiment):
+                executors = {
+                    'default': ThreadPoolExecutor(20),
+                    'processpool': ProcessPoolExecutor(5)
+                }
+                self.CommandDictionary = {
+                        'TurnIgnitionOn': TurnIgnitionOn,
+                        'TurnIgnitionOff': TurnIgnitionOff,
+                        'SetAxleBasedVehicleSpeed': SetAxleBasedVehicleSpeed,
+                        'SetBrakePressure': SetBrakePressure,
+                        'EndExperiment' : EndExperiment
+                }
+                self.scheduler = TornadoScheduler()
+                self.scheduler.configure(executors=executors)
+                self.experiment = Experiment
+                try:self.experimentname = Experiment['ExperimentName']
+                except KeyError: raise KeyError('ExperimentName not defined')
+                try:self.end_time = Experiment['Endtime']
+                except KeyError: raise KeyError('Endtime not defined')
+                #self.SSS_loop = Experiment.setdefault('SSS_loop', [])
+                self.SSS_once = Experiment.setdefault('SSS_once', [])
+                #self.CAN_loop = Experiment.setdefault('CAN_loop', [])
+                self.CAN_once = Experiment.setdefault('CAN_once', [])
+                self.CAN_utils = Experiment.setdefault('CAN_utils', [])
+                relativetime = datetime.now()
+                self.CAN0 = CanTools('can0')
+                self.CAN1 = CanTools('can1')
+                #self.SSS_loop_jobs = [self.add_SSS_loop(job, relativetime) for job in self.SSS_loop]
+                self.SSS_once_jobs = [self.add_SSS_once(job, relativetime) for job in self.SSS_once]
+                #self.CAN_loop_jobs = [self.add_CAN_loop(job, relativetime) for job in self.CAN_loop]
+                self.CAN_once_jobs = [self.add_CAN_once(job, relativetime) for job in self.CAN_once]
+                print(self.CAN_utils)
+                self.CAN_utils_jobs = [self.add_CAN_util(job, relativetime) for job in self.CAN_utils]
+                print('added util')
+                if 'EndExperiment' not in [job[1] for job in self.SSS_once]:
+                    print('error')
+                    raise tornado.web.HTTPError(400)
+                else:
+                    self.endexperiment = arrow.get(timedelta(seconds=float([job[0] for job in self.SSS_once if job[1] == 'EndExperiment'][0])+ 40.0) + relativetime).timestamp 
+                self.log_post = json.dumps({'experimentname':self.experimentname, 'endtime':self.endexperiment})
+                print('finished intializing')
+ #       def add_SSS_loop(self, SSS_loop, time):
+ #               #Jobs are coroutines. interval must be set here
+ #               try:
+ #                   serialfunction = SSS_loop[1]
+ #                   args = SSS_loop[-1]
+ #                   JOBCOROUTINE = self.CommandDictionary[serialfunction]
+ #               except KeyError:
+ #                   raise ValueError('Not supported SSS function -- please add')
+ #               return self.scheduler.add_job(JOBCOROUTINE, 'interval', args=args, seconds=SSS_loop[2], start_date=time+timedelta(seconds=30)+timedelta(seconds=SSS_loop[0]), end_date=time+timedelta(seconds=30)+timedelta(seconds=SSS_loop[0])+timedelta(seconds=SSS_loop[3]))
+        def add_SSS_once(self, SSS_once, time):
+                try:
+                    serialfunction = SSS_once[1]
+                    args = SSS_once[-1]
+                    JOBCOROUTINE = self.CommandDictionary[serialfunction]
+                except KeyError:
+                    raise ValueError('Not supported SSS function -- please add')
+                delay = timedelta(seconds=SSS_once[0]) + timedelta(seconds=30)
+                run_date = time + delay
+                return self.scheduler.add_job(JOBCOROUTINE, 'date', args=args, run_date=run_date)
+#        def add_CAN_loop(self, CAN_loop, time):
+#                try:
+#                    serialfunction = CAN_loop[1]
+#                    JOBCOROUTINE = self.CommandDictionary[serialfunction]
+#                except KeyError:
+#                    raise ValueError('Not supported function call -- please add')
+#                return self.scheduler.add_job(JOBCOROUTINE, 'interval', seconds=0)
+        def add_CAN_once(self, CAN_once, time):
+                try:
+                    CAN_message = bytes.fromhex(CAN_once[1].replace(" ", ""))
+                    args = CAN_message
+                except KeyError:
+                    raise ValueError('Not supported function call -- please add')
+                delay = timedelta(seconds=CAN_once[0]) + timedelta(seconds=30)
+                run_date = time + delay
+                if CAN_once[-1][0] == 'can0': return self.scheduler.add_job(self.CAN0.sendRawMessage, 'date', args=args, run_date=run_date)
+                elif CAN_once[-1][0] == 'can1': return self.scheduler.add_job(self.CAN1.sendRawMessage, 'date', args=args, run_date=run_date)
+                else:
+                    raise ValueError('CAN interface must be set as can1 or can0')
+
+        def add_CAN_util(self, CAN_util, time):
+                print('got here 1')
+                utilities = {
+                    'cangen': CanUtils.cangen
+                }
+                try:
+                    util = CAN_util[1]
+                    args = CAN_util[-1]
+                    JOBCOROUTINE = utilities[util]
+                except KeyError:
+                    raise ValueError('Not supported function call -- please add')
+                delay = timedelta(seconds=CAN_util[0]) + timedelta(seconds=30)
+                run_date = time + delay
+                return self.scheduler.add_job(JOBCOROUTINE, 'date', args=args, run_date=run_date)
+
+        def start(self):
+                self.scheduler.add_job(self.shutdown, 'date', run_date=datetime.now()+timedelta(seconds=30))
+                self.scheduler.add_job(self.startLogging, 'date', run_date=datetime.now()+timedelta(seconds=30))
+                InitializeTruck()
+                self.scheduler.start(paused=False)
+        @gen.coroutine
+        def startLogging(self):
+                http_client = AsyncHTTPClient()
+                request = HTTPRequest(EXP_START_LOG_URL, method='POST', body=self.log_post)
+                http_client.fetch(request, callback=self.handle_response)
+                print('sent {} to {}'.format(self.log_post, EXP_START_LOG_URL))
+                http_client.close()
+        @gen.coroutine
+        def shutdown(self):
+                global PROCESS_LIST
+                while len(self.scheduler.get_jobs()) != 0: pass
+                print('shutting down sheduler')
+                self.scheduler.shutdown(wait=False)
+                for p in PROCESS_LIST: p.kill()
+        def getJobDict(self):
+                jobDict = {}
+                jobDict.update({'SSS_loop_jobs': SSS_loop_jobs})
+                jobDict.update({'SSS_once_jobs': SSS_once_jobs})
+                jobDict.update({'CAN_loop_jobs': CAN_loop_jobs})
+                jobDict.update({'CAN_once_jobs': CAN_once_jobs})
+                return jobDict
+ 
+        def handle_response(self, response):
+            if response.error:
+                print("Error: %s" % response.error)
+            else:
+                print(response.body)
+

@@ -1,0 +1,107 @@
+<link rel="icon" 
+        type="image/png" 
+        href="/static/favicon.png">
+
+<html>
+
+<head>
+    <title>
+        HaleNow
+    </title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" hrev="/static/main.css">
+    <script src="/static/jquery/jquery-2.2.4.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    {% block js %}
+        <script>
+            function getCookie(name) {
+                var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+                return r ? r[1] : undefined;
+            }
+
+            jQuery.postJSON = function(url, args, callback) {
+                args._xsrf = getCookie("_xsrf");
+                $.ajax({url: url, data: $.param(args), dataType: "text", type: "POST",
+                    success: function(response) {
+                    callback(eval("(" + response + ")"));
+                }});
+            };
+        </script>
+    {% endblock %}
+</head>
+
+<body class="generic">
+
+<body style="background-color:{%block backgroundcolor%}white{%endblock%};">
+{% block body %}
+    <div class="container">
+    {% block logo %}
+        <div class="row row-centered">
+            <div class="col-md-12" style="text-align: center;">
+                <br/>
+                <img src="/static/logo.png" width='40%'>
+                <hr/>
+            </div>
+        </div>
+    {% endblock %}
+    {% if navbar %}
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="nav nav-tabs">
+                    {% for page in pages|sort(attribute='pos')%}
+                                                          {# For tooltip:  data-toggle="tooltip" title="{{page.desc}}" #}
+                        <li role="presentation" class="{{page.navclass}}" style="color:#E7E7E7"><a href="{{page.url}}">{{page.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        {% if sidenav %}
+            <div class="col-sm-8">
+        {% else %}
+            <div class="col-sm-12">
+        {% endif %}
+                {% block content %}
+                {% endblock %}
+            </div>
+        {% if sidenav %}
+            <div class="col-sm-4">
+                <div class="panel panel-success">
+                <div class="panel-heading">
+                        <h3 class="panel-title">
+                        Pages
+                        </h3>
+                    </div>
+                    <div class="list-package-group list-group">
+                        {% for page in pages|sort(attribute='pos')%}
+                            <div class="list-group-item">
+                                <a href="{{page.url}}">
+                                    <div class="list-group-item-text">
+                                        <h4>
+                                            {{ page.name }}
+                                        </h4>
+                                        {{ page.desc }}
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% block footer %}
+        <div class="row">
+        <div class="col-md-12">
+            <hr/>
+            <p style="text-align: center; color: white;">
+            HaleNow &copy; 2016<br/>
+            </p>
+        </div>
+    </div>
+    {% endblock %}
+{% endblock %}
+</body>
+</html>

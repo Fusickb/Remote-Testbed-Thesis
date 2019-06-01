@@ -1,0 +1,130 @@
+{% extends "layouts/base.jinja" %}
+
+{% block js %}
+<script>
+$(function(){
+setInterval(oneSecondFunction, 1000);
+});
+
+function oneSecondFunction() {
+$.get("api/get_num", function(data, status){
+        document.getElementById("num").innerHTML = data.number;
+        document.getElementById("date").innerHTML = data.date;
+    });
+$.post("api/get_table", {'api_key': '{{api_key}}'}, function(data, status){
+        loadTable('data-table', ['name', 'phone'], data.table);
+    });
+}
+
+function set_num() {
+$.post("api/set_num", {'api_key': '{{api_key}}', 'number':document.getElementById("number").value}, function(data, status){
+        document.getElementById("num").innerHTML = data.number;
+        document.getElementById("date").innerHTML = data.date;
+    });
+}
+function next() {
+$.post("api/next", {'api_key':'{{api_key}}'}, function(data, status){
+        document.getElementById("num").innerHTML = data.number;
+        document.getElementById("date").innerHTML = data.date;
+        location.reload();
+    });
+}
+$(function() {
+    $('#toggle-status').change(function() {
+      $('#next-button').prop('disabled', !$(this).prop('checked'));
+      $.post("api/set_state", {'api_key': '{{api_key}}', 'state':$(this).prop('checked')}, function(data, status){
+        
+      });
+    })
+  })
+function clear_schedule() {
+$.post("api/clear_schedule", {'api_key':'{{api_key}}'}, function(data, status){
+      location.reload();
+    });
+}
+function loadTable(tableId, fields, data) {
+    //$('#' + tableId).empty(); //not really necessary
+    var rows = '<tr><th>Name</th><th>Phone Number</th></tr>';
+    $.each(data, function(index, item) {
+        var row = '<tr>';
+        $.each(fields, function(index, field) {
+            row += '<td>' + item[field+''] + '</td>';
+        });
+        rows += row + '<tr>';
+    });
+    $('#' + tableId).html(rows);
+}
+</script>
+<script type="text/javascript" src="/static/js/bootstrap-toggle.min.js"></script>
+<link rel="stylesheet" href="/static/css/bootstrap-toggle.min.css">
+{% endblock %}
+
+
+{% block content %}
+<h1>Welcome admin.</h1>
+<div class="row">
+  <div class="col-sm-12 col-lg-6">
+    <h1>Now Serving <span id='num'>{{number}}</span></h1>
+    <h3>Last updated <span id='date'>{{date}}</span></h3>
+  </div>
+  <div class="col-sm-12 col-lg-6">
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="exampleInputEmail2">Status</label>
+        <input type="checkbox" data-toggle="toggle" data-on="Seeing peasants" data-off="Leave me alone" data-size="large" data-width="200" 
+          id="toggle-status" {% if seeing_people %} checked {% endif %}>
+        <div id="console-event"></div>
+      </div>
+    </form>
+    <form method = "post">
+      <input type="hidden" name="api_key" value="{{api_key}}">
+      <input type="button" class="btn btn-primary btn-block" name="upvote" value="Next" onclick="next();" id="next-button" {%if not seeing_people %}disabled{% endif %} />
+    </form>
+    <br>
+    <br>
+    <form class="form-inline">
+      <input type="hidden" name="api_key" value="{{api_key}}">
+      <div class="form-group">
+        <label for="exampleInputEmail2">New Value</label>
+        <input type="number" class="form-control" id="number" name="number" value="0">
+      </div>
+      <button type="button" class="btn btn-danger" onclick="set_num();">Reset Counter</button>
+    </form>
+    <br><br>
+    <form method = "post">
+      <input type="hidden" name="api_key" value="{{api_key}}">
+      <input type="button" class="btn btn-danger btn-large" name="upvote" value="Clear Schedule" onclick="clear_schedule();" id="clear-button"/>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col=sm-12">
+    <h3>Upcomming People</h3>
+    <table class="table table-striped" id="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone Number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <div>
+          {% for user in users %}
+            <tr>
+              <td>{{user[0]}}</td>
+              <td>{{user[1]}}</td>
+            </tr>
+          {% else %}
+          <tr>
+            <td>No users now</td>
+            <td></td>
+          </tr>
+          {% endfor %}
+        </div>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,94 @@
+
+from datetime import datetime, timedelta
+from apscheduler.schedulers.tornado import TornadoScheduler
+from SerialFunctions import *
+from tornado import gen
+from tornado.httpclient import AsyncHTTPClient, HTTPRequest
+import json
+import requests
+
+EXP_START_LOG_URL = 'http://129.244.254.21:8080/log/start/'
+
+class ExperimentScheduler():
+        def __init__(self, Experiment):
+                self.CommandDictionary = {
+                        'TurnIgnitionOn': TurnIgnitionOn,
+                        'TurnIgnitionOff': TurnIgnitionOff,
+                        'SetAxleBasedVehicleSpeed': SetAxleBasedVehicleSpeed,
+                        'SetBrakePressure': SetBrakePressure
+                }
+                self.scheduler = TornadoScheduler()
+                self.experiment = Experiment
+                try:self.experimentname = Experiment['ExperimentName']
+                except KeyError: raise KeyError('ExperimentName not defined')
+                try:self.end_time = Experiment['Endtime']
+                except KeyError: raise KeyError('Endtime not defined')
+                self.log_post = json.dumps({'experimentname':self.experimentname, 'endtime':self.end_time})
+                self.SSS_loop = Experiment.setdefault('SSS_loop', [])
+                self.SSS_once = Experiment.setdefault('SSS_once', [])
+                self.CAN_loop = Experiment.setdefault('CAN_loop', [])
+                self.CAN_once = Experiment.setdefault('CAN_once', [])
+                relativetime = datetime.now()
+                self.SSS_loop_jobs = [self.add_SSS_loop(job, relativetime) for job in self.SSS_loop]
+                self.SSS_once_jobs = [self.add_SSS_once(job, relativetime) for job in self.SSS_once]
+                self.CAN_loop_jobs = [self.add_CAN_loop(job, relativetime) for job in self.CAN_loop]
+                self.CAN_once_jobs = [self.add_CAN_once(job, relativetime) for job in self.CAN_once]
+        def add_SSS_loop(self, SSS_loop, time):
+                #Jobs are coroutines. interval must be set here
+                try:
+                    serialfunction = SSS_loop[1]
+                    args = SSS_loop[-1]
+                    JOBCOROUTINE = self.CommandDictionary[serialfunction]
+                except KeyError:
+                    raise ValueError('Not supported SSS function -- please add')
+                return self.scheduler.add_job(JOBCOROUTINE, 'interval', args=args, seconds=SSS_loop[2], start_date=time+timedelta(seconds=30)+timedelta(seconds=SSS_loop[0]), end_date=time+timedelta(seconds=30)+timedelta(seconds=SSS_loop[0])+timedelta(seconds=SSS_loop[3]))
+        def add_SSS_once(self, SSS_once, time):
+                try:
+                    serialfunction = SSS_once[1]
+                    args = SSS_once[-1]
+                    JOBCOROUTINE = self.CommandDictionary[serialfunction]
+                except KeyError:
+                    raise ValueError('Not supported SSS function -- please add')
+                delay = timedelta(seconds=SSS_once[0]) + timedelta(seconds=30)
+                run_date = time + delay
+                return self.scheduler.add_job(JOBCOROUTINE, 'date', args=args, run_date=run_date)
+        def add_CAN_loop(self, CAN_loop, time):
+                try:
+                    serialfunction = CAN_loop[1]
+                    JOBCOROUTINE = self.CommandDictionary[serialfunction]
+                except KeyError:
+                    raise ValueError('Not supported function call -- please add')
+                return self.scheduler.add_job(JOBCOROUTINE, 'interval', seconds=0)
+        def add_CAN_once(self, CAN_once, time):
+                return self.scheduler.add_job(JOBCOROUTINE, 'date', run_date=0)
+
+        def start(self):
+                self.scheduler.add_job(self.shutdown, 'date', run_date=datetime.now()+timedelta(seconds=30))
+                self.scheduler.add_job(self.startLogging, 'date', run_date=datetime.now()+timedelta(seconds=30))
+                InitializeTruck()
+                self.scheduler.start(paused=False)
+        @gen.coroutine
+        def startLogging(self):
+                http_client = AsyncHTTPClient()
+                request = HTTPRequest(EXP_START_LOG_URL, method='POST', body=self.log_post)
+                http_client.fetch(request, callback=self.handle_response)
+                print('sent {} to {}'.format(self.log_post, EXP_START_LOG_URL))
+                http_client.close()
+        @gen.coroutine
+        def shutdown(self):
+                while len(self.scheduler.get_jobs()) != 0: pass
+                self.scheduler.shutdown(wait=True)
+        def getJobDict(self):
+                jobDict = {}
+                jobDict.update({'SSS_loop_jobs': SSS_loop_jobs})
+                jobDict.update({'SSS_once_jobs': SSS_once_jobs})
+                jobDict.update({'CAN_loop_jobs': CAN_loop_jobs})
+                jobDict.update({'CAN_once_jobs': CAN_once_jobs})
+                return jobDict
+ 
+        def handle_response(self, response):
+            if response.error:
+                print("Error: %s" % response.error)
+            else:
+                print(response.body)
+

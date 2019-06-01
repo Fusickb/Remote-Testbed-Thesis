@@ -1,0 +1,42 @@
+import serial
+from tornado import gen
+import time
+serial = serial.Serial('/dev/ttyACM0')
+CURRENT_TRUCK_SPEED = 0
+
+def InitializeTruck():
+    serial.write('50,1'.encode('ASCII'))
+    time.sleep(1)
+    serial.write('17,2035'.encode('ASCII'))
+    time.sleep(1)
+    serial.write('18,2035'.encode('ASCII'))
+    time.sleep(1)
+    serial.write('35,2048'.encode('ASCII'))
+    time.sleep(1)
+    serial.write('36,2048'.encode('ASCII'))
+    time.sleep(1)
+    serial.write('83,14'.encode('ASCII'))
+    print('done intializing')
+
+@gen.coroutine
+def TurnIgnitionOn():
+    serial.write('50,1'.encode('ASCII'))
+
+@gen.coroutine
+def TurnIgnitionOff():
+	serial.write('50,0'.encode('ASCII'))
+
+@gen.coroutine
+def SetAxleBasedVehicleSpeed(speedMPH):
+    speedtofreq = (speedMPH+.0383)/.0716
+    serial.write('83,{}'.format(speedtofreq.encode('ASCII'))
+    CURRENT_TRUCK_SPEED = speedMPH
+@gen.coroutine
+def ApplyBrakePressure(percent, duration):
+    
+
+#@gen.coroutine
+#def SendRawBytes(bytemessage):
+        
+#@gen.coroutine
+#def getPinStates():
