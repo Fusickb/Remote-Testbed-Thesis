@@ -23,7 +23,7 @@ This GitHub repository contains source code for the thesis "Remote Simulation of
 	- Contains source code used for updating parameters
 	- Includes the seed-key exchange (with default values for security purposes), reading parameters, writing parameter, and sending session messages
 
-##Setting Up Testbed
+## Setting Up Testbed
 Open the file FrontInterface/docs/build/html/index.html in a web browser to view the original documentation for the Front interface, primarily written by Ethan Robards. A set of installation and execution instructions are provided below. The old documentation is left unmodified and installation instructions found within may not be accurate.
 
 Also note that the IP addresses used in the source code may not work since your network topology will likely be different. Be sure to adjust the IP addresses appropriately to allow the network nodes and front interface to communicate.

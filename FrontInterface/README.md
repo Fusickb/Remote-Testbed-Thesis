@@ -1,5 +1,9 @@
-Experiment editing/data displaying website for a remote testbed.  
+# Overview
 
-Requirements: Python 3,Pip
+Experiment editing/data displaying website for a remote heavy vehicle testbed.  
 
-Pip Requirements: in requirements.txt, use python3 -m pip install -r requirements.txt (unsure of syntax, i think this is correct) to install.  See docs for next steps.  
+- Requirements: Python 3,Pip
+
+- Pip Requirements: in requirements.txt inside trucksite directory. For appropriate command view README.md in the outermost directory of this repository.
+
+- Documentation of the front interface was originally provided primarily by Ethan Robards. Open the file: FrontInterface/docs/build/html/index.html
