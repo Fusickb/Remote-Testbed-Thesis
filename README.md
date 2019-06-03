@@ -1,4 +1,4 @@
-#Overview
+# Overview
 
 This GitHub repository contains source code for the thesis "Remote Simulation of Heavy Vehicle Electronic and Communications Environment" by Blake Fusick and is split into 5 main directories. A brief summary of each directory will now be explained with more details inside each of the directories.
 
@@ -28,7 +28,7 @@ Open the file FrontInterface/docs/build/html/index.html in a web browser to view
 
 Also note that the IP addresses used in the source code may not work since your network topology will likely be different. Be sure to adjust the IP addresses appropriately to allow the network nodes and front interface to communicate.
 
-###Installation of the User Interface
+### Installation of the User Interface
 
 To install required programs/libraries
 
@@ -50,7 +50,7 @@ Modifying django-scheduler library to support 12-hour time and associating event
 
 Front Interface installation is now complete. If database issues occur try `manage.py makemigrations` then `manage.py migrate` using the file found within FrontInterface/trucksite.
 
-###Installation of the Network Control Nodes (BeagleBones with TruckCape)
+### Installation of the Network Control Nodes (BeagleBones with TruckCape)
 
 1) Install Python3 on the BeagleBone
 
@@ -64,13 +64,13 @@ Front Interface installation is now complete. If database issues occur try `mana
 
 Network Node installation is now complete.
 
-###Installation of the Smart Sensor Simulator 2 Software
+### Installation of the Smart Sensor Simulator 2 Software
 
 1) Use Arduino https://www.arduino.cc/ with the teensyduino Add-In https://www.pjrc.com/teensy/teensyduino.html to upload the ino file found within SensorSimulation/. Make sure to have the entire folder contents in the same directory when uploading.
 
 Simulation software installation is now complete.
 
-##Running Testbed with Old Logging System for "Live Data"
+## Running Testbed with Old Logging System for "Live Data"
 Must be used for "Live Data" functionality of the testbed (Chapter 3 material)
 
 1) On the front interface, open a terminal and navigate to the directory where the front interface source code was installed. Navigate inside the trucksite directory.
@@ -87,7 +87,7 @@ Must be used for "Live Data" functionality of the testbed (Chapter 3 material)
 
 The Live Data and Live Plots webpages should be operational as intended with the ability to simulate front axle speed as well as perform some network based attacks as documented in the thesis.
 
-##Running Testbed with New Logging System
+## Running Testbed with New Logging System
 Must be used for experimentation to ensure 100% logging success at 100% busload and 250kbps bitrate (testing from Chapter 4)
 
 1) On the front interface, open a terminal and navigate to the directory where the front interface source code was installed. Navigate inside the trucksite directory.
@@ -106,7 +106,7 @@ Must be used for experimentation to ensure 100% logging success at 100% busload 
 
 Ensure that the machine timestamps on each of the BeagleBones an front interface are correct, and the testbed should be operational. Experiments can be created/scheduled/graphed/downloaded.
 
-#Useful Links
+# Useful Links
 
 1) TruckCape Schematics/GitHub: https://github.com/Heavy-Vehicle-Networking-At-U-Tulsa/TruckCapeProjects
 
