@@ -1,6 +1,6 @@
 # Overview
 
-Source code for the Network Control Nodes of the Remote Access Testbed.
+Source code for the Network Control Nodes of the Remote Access Testbed. Each node is a BeagleBone Black https://beagleboard.org/black with TruckCape https://github.com/Heavy-Vehicle-Networking-At-U-Tulsa/TruckCapeProjects.
 
 1) CANLogger
 	- Contains both the Old Logging System and the New Logging System (After Validation Testing)
