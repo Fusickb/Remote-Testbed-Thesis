@@ -1,59 +1,25 @@
-# Tornado Base Application #
+# Overview
 
+Each used file will be summarized here to give a brief overview of the functionality of the Tornado server https://www.tornadoweb.org/en/stable/
 
-This is a basic tornado application.
+app.py
 
-## Getting this repo ##
-```bash
-git clone git@github.com:gb1035/tornado_framework.git
-exit
-```
+- Creates regular expressions for URL and ties it to a class defined withing NSFviews.py to function as the request handler
+- File to be executed, main application
 
-## Install Requirements ##
-It is necessary to install dependencies in order to test the site locally before pushing to deployment.
+canTools.py
+- Read messages from the vehicle network
 
-### Linux ###
-```bash
-cat apt-requirements | xargs sudo apt-get install
-sudo pip install -r requirements.txt
-```
+NSFlogger.py
+- Starts threads for each CAN interface to read and write to a file for an experiment
+- Starts threads for each CAN interface to read and transfer the message to the front interface for "Live Data"
 
-### Mac ###
-```bash
-cat brew-requirements | xargs brew install
-sudo pip install -r requirements.txt
-```
+NSFutilities.py
+- Obtain the next JSON object to transmit when transferring a log file from the CAN Logger to the front interface
+- Returns plottable format of data to transmit to front interface for plotting an experiment
 
-## Install Requirements ##
-In order to run this, you need to create the setup file.
-``` bash
-cp example_settings.py settings.py
-```
-Then you need to fill out the following:
-* CAPTCHA_SECRET = the secret key from google.com/recaptcha/
-* DB_USER_USER = The user to interact with the database.
-* DB_USER_PASS = The password.
-* TORNADO_SECRET = a random string to be used by tornado for secret.
-* API_KEY = The api key to access the admin api.
+NSFviews.py
+- Request handler for commands to get the transfer the log file to the front interface, get plottable data (speed or updatable parameter), start logging, and start streaming messages "Live Data"
 
-### https ###
-You will need to set the following settings:
-* HTTPS = True
-* CERTFILE = '<path to cert file>'
-* KEYFILE = '<path to key file>'
-
-## First Time Setup ##
-In order to preform first tme set up the db, spmply run the program. On the first run, it will set up the database.
-``` bash
-./app
-```
-
-## Building the site and running ##
-To run the site:
-```bash
-./app
-```
-
-Now navigate to: [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
-
-And you should see the site.
+NSFsettings.py
+- Settings for Tornado server
