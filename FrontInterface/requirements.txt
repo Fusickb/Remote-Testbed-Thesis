@@ -1,7 +1,7 @@
 arrow==0.13.1
 numpy==1.16.2
 plotly==2.7
-django==1.11.17
+django==2.2.24
 django-scheduler
 django-background-tasks==1.2.0
 django-bootstrap3==11.0.0
