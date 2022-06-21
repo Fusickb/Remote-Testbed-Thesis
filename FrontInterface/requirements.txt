@@ -1,5 +1,5 @@
 arrow==0.13.1
-numpy==1.16.2
+numpy==1.22.0
 plotly==2.7
 django==1.11.17
 django-scheduler
